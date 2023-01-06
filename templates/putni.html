@@ -1,6 +1,5 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}Prijevoz{% endblock %}
-
 {% block navbar %}
 <div class="navbar navbar-fixed-top">
   <!-- ... -->
@@ -9,14 +8,15 @@
 
 {% block content %}
   <div class="container-fluid">
-    <table class="table table-dark">
+    <form method="POST" action="{{url_for('putni_troskovi')}}">
+    <table class="table-dark table">
     <thead>
       <tr>
-        <th scope="col">Datum</th>
-        <th scope="col">Broj prijeđenih kilometara pri dolasku</th>
-        <th scope="col">Broj prijeđenih kilometara pri odlasku</th>
-        <th scope="col">Prijevozno sredstvo</th>
-        <th scope="col">Potpis</th>
+        <th>Datum</th>
+        <th >Broj prijeđenih kilometara pri dolasku</th>
+        <th >Broj prijeđenih kilometara pri odlasku</th>
+        <th >Prijevozno sredstvo</th>
+        <th >Potpis</th>
       </tr>
       </thead>
       <tbody>
@@ -27,9 +27,11 @@
       <td>{{form[0].km_return}}</td>
         <td>{{form[0].vehicle}}</td>
       <td>{{form[0].signature}}</td>
-      <tr>
+      </tr>
       {% endfor %}
       </tbody>
     </table>
+    {{forms[0][0].submit}}
+    </form>
   </div>
 {% endblock %}
