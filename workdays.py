@@ -27,5 +27,5 @@ def get_workdays(year, month, days):
             d += timedelta(days=7)
 
 def order_days(workdays):
-    return sorted(workdays, key=lambda x:x[:3])
+    return sorted(workdays, key=lambda x: x[:3])
 
