@@ -1,0 +1,39 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Prijevoz{% endblock %}
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+
+#TODO: Ovo treba kompletno popraviti -- kopirano iz putni.html
+
+{% block content %}
+  <div class="container-fluid">
+    <form method="POST" action="{{url_for('putni_troskovi')}}">
+    <table class="table-dark table">
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th >Broj prijeđenih kilometara pri dolasku</th>
+        <th >Broj prijeđenih kilometara pri odlasku</th>
+        <th >Prijevozno sredstvo</th>
+        <th >Potpis</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for form in forms %}
+      <tr>
+      <td>{{form[1]}}</td>
+      <td>{{form[0].km_arrival}}</td>
+      <td>{{form[0].km_return}}</td>
+        <td>{{form[0].vehicle}}</td>
+      <td>{{form[0].signature}}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {{forms[0][0].submit}}
+    </form>
+  </div>
+{% endblock %}

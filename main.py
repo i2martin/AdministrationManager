@@ -2,25 +2,31 @@ from datetime import datetime
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, SelectField, IntegerField, widgets, SelectMultipleField
+# from wtforms.validators import DataRequired
 import workdays as wd
+
 app = Flask(__name__)
 Bootstrap(app)
 app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
+
+
 class PutniTroskovi(FlaskForm):
     km_arrival = IntegerField('arrival')
     km_return = IntegerField('return')
     vehicle = SelectField('vehicle', choices=["Osobni automobil", "Autobus", "Vlak"])
-    signature = StringField('signature')
     submit = SubmitField('submit')
+    checkbox = MultiCheckboxField(choices=[''])
+
 
 @app.route("/")
 def home():
     return render_template("index.html")
-# Press the green button in the gutter to run the script.
 
-forms = []
 
 @app.route("/putni", methods=["GET", "POST"])
 def putni_troskovi():

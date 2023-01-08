@@ -1,4 +1,4 @@
-{% extends "bootstrap/base.html" %}
+{% extends "base.html" %}
 {% block title %}Prijevoz{% endblock %}
 {% block navbar %}
 <div class="navbar navbar-fixed-top">
@@ -7,14 +7,14 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container-fluid">
+  <div class="container-fluid ">
     <form method="POST" action="{{url_for('putni_troskovi')}}">
-    <table class="table-dark table">
+    <table class="table-dark table text-center table-responsive">
     <thead>
       <tr>
         <th>Datum</th>
-        <th >Broj prijeđenih kilometara pri dolasku</th>
-        <th >Broj prijeđenih kilometara pri odlasku</th>
+        <th >Broj prijeđenih <br>kilometara pri dolasku</th>
+        <th >Broj prijeđenih <br> kilometara pri odlasku</th>
         <th >Prijevozno sredstvo</th>
         <th >Potpis</th>
       </tr>
@@ -23,15 +23,19 @@
       {% for form in forms %}
       <tr>
       <td>{{form[1]}}</td>
-      <td>{{form[0].km_arrival}}</td>
-      <td>{{form[0].km_return}}</td>
+      <td>{{form[0].km_arrival(size=10)}}</td>
+      <td>{{form[0].km_return(size=10)}}</td>
         <td>{{form[0].vehicle}}</td>
-      <td>{{form[0].signature}}</td>
+        <td>{{form[0].checkbox}}</td>
       </tr>
       {% endfor %}
       </tbody>
+      <tfoot>
+      </tfoot>
     </table>
-    {{forms[0][0].submit}}
+  <div class="justify-content-center align-content-center text-center">
+    {{forms[0][0].submit(class='btn btn-light btn-outline-light btn-lg col-3 text-dark')}}
+  </div>
     </form>
   </div>
 {% endblock %}
