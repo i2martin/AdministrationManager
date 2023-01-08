@@ -1,13 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Prijevoz{% endblock %}
-{% block navbar %}
-<div class="navbar navbar-fixed-top">
-    <!-- ... -->
-</div>
-{% endblock %}
+{% block title %}Honorari{% endblock %}
 
 {% block content %}
-<div class="container-fluid ">
+<div class="container-fluid custom-padding">
     <form action="{{url_for('putni_troskovi')}}" method="POST">
         <table class="table-dark table text-center table-responsive table-md">
             <thead>
