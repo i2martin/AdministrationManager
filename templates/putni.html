@@ -9,31 +9,31 @@
 {% block content %}
   <div class="container-fluid ">
     <form method="POST" action="{{url_for('putni_troskovi')}}">
-    <table class="table-dark table text-center table-responsive">
+    <table class="table-dark table text-center table-responsive table-md">
     <thead>
       <tr>
         <th>Datum</th>
         <th >Broj prijeđenih <br>kilometara pri dolasku</th>
         <th >Broj prijeđenih <br> kilometara pri odlasku</th>
         <th >Prijevozno sredstvo</th>
-        <th >Potpis</th>
+        <th >Potvrdi</th>
       </tr>
       </thead>
       <tbody>
       {% for form in forms %}
       <tr>
-      <td>{{form[1]}}</td>
-      <td>{{form[0].km_arrival(size=10)}}</td>
-      <td>{{form[0].km_return(size=10)}}</td>
-        <td>{{form[0].vehicle}}</td>
-        <td>{{form[0].checkbox}}</td>
+      <td class="no-padding">{{form[1]}}</td>
+      <td>{{form[0].km_arrival(class='no-padding rounded shadow-lg')}}</td>
+      <td>{{form[0].km_return(class='no-padding rounded')}}</td>
+        <td>{{form[0].vehicle(class='no-padding rounded')}}</td>
+        <td>{{form[0].checkbox(class='no-padding rounded')}}</td>
       </tr>
       {% endfor %}
       </tbody>
       <tfoot>
       </tfoot>
     </table>
-  <div class="justify-content-center align-content-center text-center">
+  <div class="btn-custom justify-content-center align-content-center text-center">
     {{forms[0][0].submit(class='btn btn-light btn-outline-light btn-lg col-3 text-dark')}}
   </div>
     </form>
