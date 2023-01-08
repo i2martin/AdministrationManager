@@ -26,6 +26,14 @@ def get_workdays(year, month, days):
             yield d
             d += timedelta(days=7)
 
+
 def order_days(workdays):
     return sorted(workdays, key=lambda x: x[:3])
 
+
+def only_date(workdays):
+    for i in range(0, len(workdays)):
+        workdays[i] = workdays[i][0:2]
+        if str(workdays[i][0]) == '0':
+            workdays[i] = workdays[i][1:]
+    return workdays

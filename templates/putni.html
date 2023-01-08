@@ -22,9 +22,9 @@
       <tbody>
       {% for form in forms %}
       <tr>
-      <td class="no-padding">{{form[1]}}</td>
-      <td>{{form[0].km_arrival(class='no-padding rounded shadow-lg')}}</td>
-      <td>{{form[0].km_return(class='no-padding rounded')}}</td>
+      <td class="no-padding text-center">{{form[1]}}</td>
+      <td>{{form[0].km_arrival(class='no-padding rounded')}}</td>
+      <td>{{form[0].km_return(size=20,class='no-padding rounded')}}</td>
         <td>{{form[0].vehicle(class='no-padding rounded')}}</td>
         <td>{{form[0].checkbox(class='no-padding rounded')}}</td>
       </tr>
