@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container-fluid custom-padding">
-    <form action="{{url_for('putni_troskovi')}}" method="POST">
+    <form action="{{url_for('honorari')}}" method="POST">
         <table class="table-dark table text-center table-responsive table-md">
             <thead>
             <tr>
@@ -27,7 +27,7 @@
                 <td>{{form.subject}}</td>
                 <td>{{form.class_tag(size = 5)}}</td>
                 {% for i in range(0,number_of_workdays) %}
-                <td>{{form.hours(size=1)}}</td>
+                <td>{{form.hours(size=1,class="text-center")}}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
