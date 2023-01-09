@@ -1,6 +1,7 @@
+import os
 import time
 from datetime import datetime
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, IntegerField, widgets, SelectMultipleField
@@ -17,20 +18,23 @@ class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
-#TODO - add validators
+
+# TODO - add validators
 class PutniTroskovi(FlaskForm):
-    km_arrival = StringField('arrival') #integerfield --> ne može se korigirati size/length??
-    km_return = StringField('return') #integerfield --> ne može se korigirati size/length??
+    km_arrival = StringField('arrival')  # integerfield --> ne može se korigirati size/length??
+    km_return = StringField('return')  # integerfield --> ne može se korigirati size/length??
     vehicle = SelectField('vehicle', choices=["Osobni automobil", "Autobus", "Vlak"])
     checkbox = MultiCheckboxField(choices=[''])
     submit = SubmitField(label="Preuzmi", id='submit')
 
-#TODO - add validators
+
+# TODO - add validators
 class Honorari(FlaskForm):
     subject = StringField('subject')
     class_tag = StringField('class-tag')
-    hours = StringField('date') #integerfield --> ne može se korigirati size/length??
+    hours = StringField('date')  # integerfield --> ne može se korigirati size/length??
     submit = SubmitField(label="Preuzmi", id='submit')
+
 
 @app.route("/")
 def home():
@@ -56,13 +60,14 @@ def putni_troskovi():
             forms.append([form, workdays[i]])
         return render_template("putni.html", forms=forms, workdays=workdays)
 
+
 @app.route("/honorari", methods=["GET", "POST"])
 def honorari():
     if request.method == "POST":
-        #print(request.form.to_dict(flat=False)) #request.data i request.form
-        #print(request.data)
+        # print(request.form.to_dict(flat=False)) #request.data i request.form
+        # print(request.data)
         me.honorarium(request.form.to_dict(flat=False))
-        return "<h1> Done! </h1>"
+        return send_from_directory(directory='static', path='files/temp_files/tablica-honorari.xlsx')
     else:
         workdays = []
         year = datetime.now().year
