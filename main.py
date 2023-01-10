@@ -4,10 +4,11 @@ from datetime import datetime
 from flask import Flask, render_template, request, send_from_directory
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField, widgets, SelectMultipleField
-# from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField, HiddenField
+from wtforms.validators import DataRequired
 import workdays as wd
-import manage_excel as me
+import honorarium_excel as he
+import travel_excel as te
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -24,7 +25,8 @@ class PutniTroskovi(FlaskForm):
     km_arrival = StringField('arrival')  # integerfield --> ne može se korigirati size/length??
     km_return = StringField('return')  # integerfield --> ne može se korigirati size/length??
     vehicle = SelectField('vehicle', choices=["Osobni automobil", "Autobus", "Vlak"])
-    checkbox = MultiCheckboxField(choices=[''])
+    checkbox = MultiCheckboxField('checkbox', choices=[''], render_kw={"onclick": "change('id')"})
+    #checkbox_tag = HiddenField('checkbox')
     submit = SubmitField(label="Preuzmi", id='submit')
 
 
@@ -44,7 +46,9 @@ def home():
 @app.route("/putni", methods=["GET", "POST"])
 def putni_troskovi():
     if request.method == "POST":
-        print(request.form)
+        checkboxes = request.form.checkbox
+        print(checkboxes)
+        te.travel(request.form.to_dict(flat=False))
         return "<h1> Done! </h1>"
     else:
         workdays = []
@@ -66,7 +70,7 @@ def honorari():
     if request.method == "POST":
         # print(request.form.to_dict(flat=False)) #request.data i request.form
         # print(request.data)
-        me.honorarium(request.form.to_dict(flat=False))
+        he.honorarium(request.form.to_dict(flat=False))
         return send_from_directory(directory='static', path='files/temp_files/tablica-honorari.xlsx')
     else:
         workdays = []

@@ -7,8 +7,15 @@
 {% endblock %}
 
 {% block content %}
+<script>
+          function change(id){
+
+          }
+
+</script>
   <div class="container-fluid custom-padding">
     <form method="POST" action="{{url_for('putni_troskovi')}}">
+
     <table class="table-dark table text-center table-responsive table-md">
     <thead>
       <tr>
@@ -21,9 +28,10 @@
       </thead>
       <tbody>
       {% for form in forms %}
+      {{form.ctf_token}}
       <tr>
       <td class="no-padding text-center">{{form[1]}}</td>
-      <td>{{form[0].km_arrival(class='no-padding rounded')}}</td>
+      <td>{{form[0].km_arrival( class='no-padding rounded')}}</td>
       <td>{{form[0].km_return(class='no-padding rounded')}}</td>
         <td>{{form[0].vehicle(class='no-padding rounded')}}</td>
         <td>{{form[0].checkbox(class='no-padding rounded')}}</td>
@@ -33,7 +41,7 @@
       <tfoot>
       </tfoot>
     </table>
-  <div class="btn-custom justify-content-center align-content-center text-center">
+  <div class="btn-custom text-center">
     {{forms[0][0].submit(class='btn btn-light btn-outline-light btn-lg col-3 text-dark')}}
   </div>
     </form>
