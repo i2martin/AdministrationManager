@@ -1,26 +1,29 @@
-import pandas
 import openpyxl
 import shutil
 
+list_of_cell_dates = ['A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'A19', 'A20', 'A21', 'A22', 'A23', 'A24',
+                      'A25', 'A26', 'A27', 'A28', 'A29', 'A30', 'A31', 'A32', 'A33']
 
-list_of_cell_dates = ["D10", "E10", "F10", "G10", "H10", "I10", "J10", "K10", "L10", "M10", "N10", "O10", "P10", "Q10",
-                      "R10", "S10", "T10", "U10", "V10", "W10", "X10", "Y10", "Z10", "AA10"]
+km_arrival_cells = ['B11', 'B12', 'B13', 'B14', 'B15', 'B16', 'B17', 'B18', 'B19', 'B20', 'B21', 'B22', 'B23', 'B24',
+                    'B25', 'B26', 'B27', 'B28', 'B29', 'B30', 'B31', 'B32', 'B33']
 
-subject_cells = ["A12", "A13", "A14", "A15", "A16"]
-
-class_tag_cells = ["B12", "B13", "B14", "B15", "B16"]
+km_return_cells = ['C11', 'C12', 'C13', 'C14', 'C15', 'C16', 'C17', 'C18', 'C19', 'C20', 'C21', 'C22', 'C23', 'C24',
+                   'C25', 'C26', 'C27', 'C28', 'C29', 'C30', 'C31', 'C32', 'C33']
 
 honorarium_cell_columns = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q",
                            "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AA"]
 
+vehicle_cells = ['D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 'D20', 'D21', 'D22', 'D23', 'D24',
+                 'D25', 'D26', 'D27', 'D28', 'D29', 'D30', 'D31', 'D32', 'D33']
+
 total_count_cells = ["AB12", "AB13", "AB14", "AB15", "AB16", "AB17"]
 
-
-filename='static/files/tablica-prijevoz.xlsx'
+filename = 'static/files/tablica-prijevoz.xlsx'
 original = r'static/files/tablica-prijevoz.xlsx'
 target = r'static/files/temp_files/tablica-prijevoz.xlsx'
 month_year_cell = "A10"
 shutil.copyfile(original, target)
+
 
 # TODO: Check if the file actually exists so it doesn't crash
 def open_workbook(filename):
@@ -31,8 +34,9 @@ def open_workbook(filename):
 def select_worksheet(workbook):
     return workbook['Obrazac']
 
-def travel(data):
-    shutil.copyfile(original, target) #create a duplicate of .xls and open it
+#TODO: Save template data in memory and edit it instead of creating a copy
+def travel(data, workdays):
+    shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
     km_arrival = data["km_arrival"]
@@ -43,31 +47,11 @@ def travel(data):
     del data["vehicle"]
     del data["submit"]
     print(data)
-    """subjects = data["subject"]
-    class_tags = data["class_tag"]
-    hours = data["hours"]
-    temp = 0
-    hours_rows = []
-    temp_hours = []
-    for hour in hours:  # split list of hours into 5 list of max 24 elements (max. 24 workdays per subject)
-        temp_hours.append(hour)
-        temp = temp + 1
-        if temp == 24:
-            hours_rows.append(temp_hours)
-            temp_hours = []
-            temp = 0
-    print(hours_rows)
-    for i in range(0, len(subjects)):
-        if subjects[i] != '':
-            print(subject_cells[i])
-            worksheet[subject_cells[i]] = subjects[i]
-            worksheet[class_tag_cells[i]] = class_tags[i]
-            row = get_row(i)
-            total_count = 0
-            for j in range(0, len(honorarium_cell_columns)):  # loop through each hours list and add them to excel file
-                worksheet[honorarium_cell_columns[j] + row] = hours_rows[i][j]
-                if hours_rows[i][j] != '':  # count total hours for each subject
-                    total_count = total_count + int(hours_rows[i][j])
-            worksheet[total_count_cells[i]] = total_count
-    workbook.save(target)"""
-
+    if len(data) > 0:
+        data_keys = list(data.keys())
+        for i in range (0, len(data_keys)):
+            worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]
+            worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
+            worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
+            worksheet[vehicle_cells[i]] = vehicle[int(data_keys[i])]
+        workbook.save(target)

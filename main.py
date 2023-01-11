@@ -25,9 +25,8 @@ class PutniTroskovi(FlaskForm):
     km_arrival = StringField('arrival')  # integerfield --> ne može se korigirati size/length??
     km_return = StringField('return')  # integerfield --> ne može se korigirati size/length??
     vehicle = SelectField('vehicle', choices=["Osobni automobil", "Autobus", "Vlak"])
-    #checkbox = MultiCheckboxField('checkbox', choices=[''], render_kw={"onclick": "change(this)"})
-    #checkbox_tag = HiddenField('checkbox')
     submit = SubmitField(label="Preuzmi", id='submit')
+
 
 # TODO - add validators
 class Honorari(FlaskForm):
@@ -44,19 +43,17 @@ def home():
 
 @app.route("/putni", methods=["GET", "POST"])
 def putni_troskovi():
+    workdays = []
+    year = datetime.now().year
+    month = datetime.now().month
+    for d in wd.get_workdays(year, month, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']):
+        workdays.append(d.strftime("%d.%m.%Y"))
+    workdays = wd.order_days(workdays)
+    number_of_workdays = len(workdays)
     if request.method == "POST":
-        print(request.form)
-        print(request.data)
-        te.travel(request.form.to_dict(flat=False))
-        return "<h1> Done! </h1>"
+        te.travel(request.form.to_dict(flat=False), workdays)
+        return send_from_directory(directory='static', path='files/temp_files/tablica-prijevoz.xlsx')
     else:
-        workdays = []
-        year = datetime.now().year
-        month = datetime.now().month
-        for d in wd.get_workdays(year, month, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']):
-            workdays.append(d.strftime("%d.%m.%Y"))
-        workdays = wd.order_days(workdays)
-        number_of_workdays = len(workdays)
         form = PutniTroskovi()
         return render_template("putni.html", form=form, workdays=workdays, number_of_workdays=number_of_workdays)
 

@@ -44,7 +44,7 @@ def get_row(i):
     if i == 0:
         return "16"
 
-
+#TODO: Save template data in memory and edit it instead of creating a copy
 def honorarium(data, workdays):
     shutil.copyfile(original, target) #create a duplicate of .xls and open it
     workbook = open_workbook(target)
