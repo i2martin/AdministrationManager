@@ -63,18 +63,18 @@ def putni_troskovi():
 
 @app.route("/honorari", methods=["GET", "POST"])
 def honorari():
+    workdays = []
+    year = datetime.now().year
+    month = datetime.now().month
+    for d in wd.get_workdays(year, month, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']):
+        workdays.append(d.strftime("%d.%m.%Y"))
+    workdays = wd.order_days(workdays)
+    workdays = wd.only_date(workdays)
+    number_of_workdays = len(workdays)
     if request.method == "POST":
-        he.honorarium(request.form.to_dict(flat=False))
+        he.honorarium(request.form.to_dict(flat=False), workdays)
         return send_from_directory(directory='static', path='files/temp_files/tablica-honorari.xlsx')
     else:
-        workdays = []
-        year = datetime.now().year
-        month = datetime.now().month
-        for d in wd.get_workdays(year, month, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']):
-            workdays.append(d.strftime("%d.%m.%Y"))
-        workdays = wd.order_days(workdays)
-        workdays = wd.only_date(workdays)
-        number_of_workdays = len(workdays)
         forms = []
         for i in range(0, 5):
             form = Honorari()

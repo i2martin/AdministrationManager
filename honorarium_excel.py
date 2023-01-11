@@ -45,13 +45,15 @@ def get_row(i):
         return "16"
 
 
-def honorarium(data):
+def honorarium(data, workdays):
     shutil.copyfile(original, target) #create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
     subjects = data["subject"]
     class_tags = data["class_tag"]
     hours = data["hours"]
+    for i in range(0, len(workdays)):
+        worksheet[list_of_cell_dates[i]] = workdays[i]
     temp = 0
     hours_rows = []
     temp_hours = []
