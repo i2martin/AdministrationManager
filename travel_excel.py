@@ -41,6 +41,7 @@ def travel(data):
     del data["km_return"]
     vehicle = data["vehicle"]
     del data["vehicle"]
+    del data["submit"]
     print(data)
     """subjects = data["subject"]
     class_tags = data["class_tag"]
