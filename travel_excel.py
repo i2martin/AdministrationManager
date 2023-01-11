@@ -35,6 +35,12 @@ def travel(data):
     shutil.copyfile(original, target) #create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
+    km_arrival = data["km_arrival"]
+    del data["km_arrival"]
+    km_return = data["km_return"]
+    del data["km_return"]
+    vehicle = data["vehicle"]
+    del data["vehicle"]
     print(data)
     """subjects = data["subject"]
     class_tags = data["class_tag"]
