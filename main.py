@@ -70,16 +70,19 @@ def home():
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
-    #TODO: Add checks (i.e. existing username) so that it doesn't crash
+    # TODO: Add checks (i.e. existing username) so that it doesn't crash
     if request.method == "POST":
         new_user = User(
             username=request.form.get('username'),
             password= generate_password_hash(password=request.form.get('password'), method='pbkdf2:sha256', salt_length=8),
             organisation=request.form.get('organisation')
         )
+        print(new_user.username)
+        print(new_user.password)
+        print(new_user.organisation)
         db.session.add(new_user)
         db.session.commit()
-
+        login_user(new_user)
         return redirect(url_for("putni_troskovi"))
 
     return render_template("register.html")
