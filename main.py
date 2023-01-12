@@ -1,18 +1,45 @@
-import os
-import time
 from datetime import datetime
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField, HiddenField, FieldList
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField
+# from wtforms.validators import DataRequired
 import workdays as wd
 import honorarium_excel as he
 import travel_excel as te
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
+
+login_manager = LoginManager()
 app = Flask(__name__)
-Bootstrap(app)
+
 app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+    organisation = db.Column(db.String(1000))
+
+
+with app.app_context():
+    Bootstrap(app)
+    db.create_all()
+    login_manager.init_app(app)
 
 
 class MultiCheckboxField(SelectMultipleField):
@@ -41,7 +68,46 @@ def home():
     return render_template("index.html")
 
 
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    #TODO: Add checks (i.e. existing username) so that it doesn't crash
+    if request.method == "POST":
+        new_user = User(
+            username=request.form.get('username'),
+            password= generate_password_hash(password=request.form.get('password'), method='pbkdf2:sha256', salt_length=8),
+            organisation=request.form.get('organisation')
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(url_for("putni_troskovi"))
+
+    return render_template("register.html")
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    # TODO: Add checks (i.e. existing username) so that it doesn't crash
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # Find user by username entered.
+        user = User.query.filter_by(username=username).first()
+        # Check stored password hash against entered password hashed.
+        if check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('putni_troskovi'))
+    return render_template("login.html")
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
 @app.route("/putni", methods=["GET", "POST"])
+@login_required
 def putni_troskovi():
     workdays = []
     year = datetime.now().year
@@ -59,6 +125,7 @@ def putni_troskovi():
 
 
 @app.route("/honorari", methods=["GET", "POST"])
+@login_required
 def honorari():
     workdays = []
     year = datetime.now().year

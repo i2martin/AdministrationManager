@@ -34,7 +34,7 @@ def open_workbook(filename):
 def select_worksheet(workbook):
     return workbook['Obrazac']
 
-#TODO: Save template data in memory and edit it instead of creating a copy
+# TODO: Save template data in memory and edit it instead of creating a copy
 def travel(data, workdays):
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)

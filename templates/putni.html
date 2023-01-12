@@ -1,13 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Prijevoz{% endblock %}
 {% block navbar %}
-<div class="navbar navbar-fixed-top">
-    <!-- ... -->
-</div>
 {% endblock %}
-
 {% block content %}
-
+{% include 'header.html' %}
 <div class="container-fluid custom-padding">
     <form action="{{url_for('putni_troskovi')}}" id="form" method="POST">
         {{form.ctf_token}}
