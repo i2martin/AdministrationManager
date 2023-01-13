@@ -2,6 +2,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
+from flask import flash
 from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField
 # from wtforms.validators import DataRequired
 import workdays as wd
@@ -65,6 +66,7 @@ class Honorari(FlaskForm):
 
 @app.route("/")
 def home():
+    flash('Logged in successfully.')
     return render_template("index.html")
 
 

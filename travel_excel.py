@@ -46,6 +46,9 @@ def travel(data, workdays):
     vehicle = data["vehicle"]
     del data["vehicle"]
     del data["submit"]
+    for key in data:
+        if key == "vehicle" or key == "km_return" or key == "km_arrival":
+            del[key]
     print(data)
     if len(data) > 0:
         data_keys = list(data.keys())
