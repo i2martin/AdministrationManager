@@ -1,16 +1,19 @@
-<script src="https://kit.fontawesome.com/5f07e011aa.js" crossorigin="anonymous"></script>
-<nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+<script crossorigin="anonymous" src="https://kit.fontawesome.com/5f07e011aa.js"></script>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="#"><img alt="Logo" class="img-fluid"
-                                              src="{{url_for('static', filename='images/logo2.png')}}" style="height: 50px;"></a>
-        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                                              src="{{url_for('static', filename='images/logo2.png')}}"
+                                              style="height: 50px;"></a>
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
                 data-bs-target="#navbarSupportedContent" data-bs-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a aria-current="page" class="nav-link active" href="#" style="color: #333333; transform:scale(1.4);"><i class="fa-sharp fa-solid fa-house"></i></a>
+                    <a aria-current="page" class="nav-link active" href="#"
+                       style="color: #333333; transform:scale(1.4);"><i class="fa-sharp fa-solid fa-house"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('putni_troskovi')}}">Prijevoz</a>
@@ -21,10 +24,12 @@
             </ul>
             <ul class="navbar-nav me-2 mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url_for('logout')}}"><i class="fa-solid fa-right-from-bracket" style="transform:scale(1.4);"></i></a>
+                    <a class="nav-link" href="{{url_for('logout')}}"><i class="fa-solid fa-right-from-bracket"
+                                                                        style="transform:scale(1.4);"></i></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="fa-sharp fa-solid fa-gear" style="transform:scale(1.4);"></i></a>
+                    <a class="nav-link" href="{{url_for('postavke')}}"><i class="fa-sharp fa-solid fa-gear"
+                                                                          style="transform:scale(1.4);"></i></a>
                 </li>
             </ul>
         </div>

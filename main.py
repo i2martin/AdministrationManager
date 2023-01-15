@@ -12,17 +12,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
-
 login_manager = LoginManager()
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
 
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
 
 
 @login_manager.user_loader
@@ -34,7 +31,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    organisation = db.Column(db.String(1000))
+    organisation = db.Column(db.String(100))
+    travel_distance = db.Column(db.Integer)
+    name = db.Column(db.String(100))
+    surname = db.Column(db.String(100))
+    work_address = db.Column(db.String(100))
 
 
 with app.app_context():
@@ -50,50 +51,56 @@ class MultiCheckboxField(SelectMultipleField):
 
 # TODO - add validators
 class PutniTroskovi(FlaskForm):
-    km_arrival = StringField('arrival')  # integerfield --> ne može se korigirati size/length??
-    km_return = StringField('return')  # integerfield --> ne može se korigirati size/length??
-    vehicle = SelectField('vehicle', choices=["Osobni automobil", "Autobus", "Vlak"])
+    km_arrival = StringField('arrival')
+    km_return = StringField('return')
+    vehicle = SelectField('vehicle', choices=['Osobni automobil', 'Autobus', 'Vlak'])
     submit = SubmitField(label="Preuzmi", id='submit')
 
+
+# TODO - add validators
+class Postavke(FlaskForm):
+    name = StringField('arrival')
+    surname = StringField('arrival')
+    work_address = StringField('arrival')
+    travel_distance = StringField('arrival')
+    submit = SubmitField(label='Spremi', id='submit')
 
 # TODO - add validators
 class Honorari(FlaskForm):
     subject = StringField('subject')
     class_tag = StringField('class-tag')
-    hours = StringField('date')  # integerfield --> ne može se korigirati size/length??
-    submit = SubmitField(label="Preuzmi", id='submit')
+    hours = StringField('date')
+    submit = SubmitField(label='Preuzmi', id='submit')
 
 
-@app.route("/")
+@app.route('/')
 def home():
     flash('Logged in successfully.')
-    return render_template("index.html")
+    return render_template('index.html')
 
 
-@app.route('/register', methods=["GET", "POST"])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     # TODO: Add checks (i.e. existing username) so that it doesn't crash
     if request.method == "POST":
         new_user = User(
             username=request.form.get('username'),
-            password= generate_password_hash(password=request.form.get('password'), method='pbkdf2:sha256', salt_length=8),
+            password=generate_password_hash(password=request.form.get('password'), method='pbkdf2:sha256',
+                                            salt_length=8),
             organisation=request.form.get('organisation')
         )
-        print(new_user.username)
-        print(new_user.password)
-        print(new_user.organisation)
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for("putni_troskovi"))
+        return redirect(url_for('putni_troskovi'))
 
-    return render_template("register.html")
+    return render_template('register.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # TODO: Add checks (i.e. existing username) so that it doesn't crash
-    if request.method == "POST":
+    if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         # Find user by username entered.
@@ -102,7 +109,7 @@ def login():
         if check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('putni_troskovi'))
-    return render_template("login.html")
+    return render_template('login.html')
 
 
 @app.route('/logout')
@@ -111,36 +118,36 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/putni", methods=["GET", "POST"])
+@app.route('/putni', methods=['GET', 'POST'])
 @login_required
 def putni_troskovi():
     workdays = []
     year = datetime.now().year
     month = datetime.now().month
     for d in wd.get_workdays(year, month, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']):
-        workdays.append(d.strftime("%d.%m.%Y"))
+        workdays.append(d.strftime('%d.%m.%Y'))
     workdays = wd.order_days(workdays)
     number_of_workdays = len(workdays)
-    if request.method == "POST":
+    if request.method == 'POST':
         te.travel(request.form.to_dict(flat=False), workdays)
         return send_from_directory(directory='static', path='files/temp_files/tablica-prijevoz.xlsx')
     else:
         form = PutniTroskovi()
-        return render_template("putni.html", form=form, workdays=workdays, number_of_workdays=number_of_workdays)
+        return render_template('putni.html', form=form, workdays=workdays, number_of_workdays=number_of_workdays)
 
 
-@app.route("/honorari", methods=["GET", "POST"])
+@app.route('/honorari', methods=['GET', 'POST'])
 @login_required
 def honorari():
     workdays = []
     year = datetime.now().year
     month = datetime.now().month
     for d in wd.get_workdays(year, month, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']):
-        workdays.append(d.strftime("%d.%m.%Y"))
+        workdays.append(d.strftime('%d.%m.%Y'))
     workdays = wd.order_days(workdays)
     workdays = wd.only_date(workdays)
     number_of_workdays = len(workdays)
-    if request.method == "POST":
+    if request.method == 'POST':
         he.honorarium(request.form.to_dict(flat=False), workdays)
         return send_from_directory(directory='static', path='files/temp_files/tablica-honorari.xlsx')
     else:
@@ -148,7 +155,32 @@ def honorari():
         for i in range(0, 5):
             form = Honorari()
             forms.append(form)
-        return render_template("honorari.html", forms=forms, workdays=workdays, number_of_workdays=number_of_workdays)
+        return render_template('honorari.html', forms=forms, workdays=workdays, number_of_workdays=number_of_workdays)
+
+
+@app.route('/postavke', methods=['GET', 'POST'])
+@login_required
+def postavke():
+    form = Postavke()
+    if request.method == 'POST':
+        name = request.form.get('name')
+        surname = request.form.get('surname')
+        work_address = request.form.get('work_address')
+        travel_distance = request.form.get('travel_distance')
+        if name != "":
+            current_user.name = name
+            db.session.commit()
+        if surname != "":
+            current_user.surname = surname
+            db.session.commit()
+        if work_address != "":
+            current_user.work_address = work_address
+            db.session.commit()
+        if travel_distance != "":
+            current_user.travel_distance = travel_distance
+            db.session.commit()
+        return redirect('putni')
+    return render_template('postavke.html', form=form)
 
 
 if __name__ == '__main__':

@@ -2,7 +2,6 @@ import pandas
 import openpyxl
 import shutil
 
-
 list_of_cell_dates = ["D10", "E10", "F10", "G10", "H10", "I10", "J10", "K10", "L10", "M10", "N10", "O10", "P10", "Q10",
                       "R10", "S10", "T10", "U10", "V10", "W10", "X10", "Y10", "Z10", "AA10"]
 
@@ -15,12 +14,12 @@ honorarium_cell_columns = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"
 
 total_count_cells = ["AB12", "AB13", "AB14", "AB15", "AB16", "AB17"]
 
-
-filename='static/files/tablica-honorari.xlsx'
+filename = 'static/files/tablica-honorari.xlsx'
 original = r'static/files/tablica-honorari.xlsx'
 target = r'static/files/temp_files/tablica-honorari.xlsx'
 
 shutil.copyfile(original, target)
+
 
 # TODO: Check if the file actually exists so it doesn't crash
 def open_workbook(filename):
@@ -44,9 +43,10 @@ def get_row(i):
     if i == 0:
         return "16"
 
-#TODO: Save template data in memory and edit it instead of creating a copy
+
+# TODO: Save template data in memory and edit it instead of creating a copy
 def honorarium(data, workdays):
-    shutil.copyfile(original, target) #create a duplicate of .xls and open it
+    shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
     subjects = data["subject"]
@@ -78,4 +78,3 @@ def honorarium(data, workdays):
                     total_count = total_count + int(hours_rows[i][j])
             worksheet[total_count_cells[i]] = total_count
     workbook.save(target)
-

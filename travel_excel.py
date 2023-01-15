@@ -34,6 +34,7 @@ def open_workbook(filename):
 def select_worksheet(workbook):
     return workbook['Obrazac']
 
+
 # TODO: Save template data in memory and edit it instead of creating a copy
 def travel(data, workdays):
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
@@ -48,11 +49,11 @@ def travel(data, workdays):
     del data["submit"]
     for key in data:
         if key == "vehicle" or key == "km_return" or key == "km_arrival":
-            del[key]
+            del [key]
     print(data)
     if len(data) > 0:
         data_keys = list(data.keys())
-        for i in range (0, len(data_keys)):
+        for i in range(0, len(data_keys)):
             worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]
             worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
             worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
