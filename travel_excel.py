@@ -36,7 +36,7 @@ def select_worksheet(workbook):
 
 
 # TODO: Save template data in memory and edit it instead of creating a copy
-def travel(data, workdays):
+def travel(data, workdays, user):
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
@@ -58,4 +58,13 @@ def travel(data, workdays):
             worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
             worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
             worksheet[vehicle_cells[i]] = vehicle[int(data_keys[i])]
-        workbook.save(target)
+
+    #add user specific fields to excel table (if they are set)
+    if user.work_address is not None:
+        worksheet["B6"] = user.work_address
+    if user.home_address is not None:
+        worksheet["B7"] = user.home_address
+    if user.name is not None and user.surname is not None:
+        worksheet["C5"] = user.name + " " + user.surname
+
+    workbook.save(target)

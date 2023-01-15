@@ -45,7 +45,7 @@ def get_row(i):
 
 
 # TODO: Save template data in memory and edit it instead of creating a copy
-def honorarium(data, workdays):
+def honorarium(data, workdays, user):
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
@@ -77,4 +77,14 @@ def honorarium(data, workdays):
                 if hours_rows[i][j] != '':  # count total hours for each subject
                     total_count = total_count + int(hours_rows[i][j])
             worksheet[total_count_cells[i]] = total_count
+    if user.organisation is not None:
+        worksheet["A3"] = user.organisation
+    else:
+        worksheet["A3"] = "Vaša organizacija/škola"
+    if user.name is not None and user.surname is not None:
+        worksheet["F7"] = user.name + " " + user.surname
+    if user.work_address is not None:
+        worksheet["A4"] = user.work_address
+    else:
+        worksheet["A4"] = "Vaša adresa rada"
     workbook.save(target)

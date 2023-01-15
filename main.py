@@ -31,11 +31,12 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    organisation = db.Column(db.String(100))
-    travel_distance = db.Column(db.Integer)
     name = db.Column(db.String(100))
     surname = db.Column(db.String(100))
+    organisation = db.Column(db.String(100))
     work_address = db.Column(db.String(100))
+    home_address = db.Column(db.String(100))
+    travel_distance = db.Column(db.Integer)
 
 
 with app.app_context():
@@ -62,8 +63,10 @@ class Postavke(FlaskForm):
     name = StringField('arrival')
     surname = StringField('arrival')
     work_address = StringField('arrival')
+    home_address = StringField('arrival')
     travel_distance = StringField('arrival')
     submit = SubmitField(label='Spremi', id='submit')
+
 
 # TODO - add validators
 class Honorari(FlaskForm):
@@ -129,11 +132,12 @@ def putni_troskovi():
     workdays = wd.order_days(workdays)
     number_of_workdays = len(workdays)
     if request.method == 'POST':
-        te.travel(request.form.to_dict(flat=False), workdays)
+        te.travel(data=request.form.to_dict(flat=False), workdays=workdays, user=current_user)
         return send_from_directory(directory='static', path='files/temp_files/tablica-prijevoz.xlsx')
     else:
         form = PutniTroskovi()
-        return render_template('putni.html', form=form, workdays=workdays, number_of_workdays=number_of_workdays)
+        return render_template('putni.html', form=form, workdays=workdays, number_of_workdays=number_of_workdays,
+                               travel_distance=current_user.travel_distance)
 
 
 @app.route('/honorari', methods=['GET', 'POST'])
@@ -148,7 +152,7 @@ def honorari():
     workdays = wd.only_date(workdays)
     number_of_workdays = len(workdays)
     if request.method == 'POST':
-        he.honorarium(request.form.to_dict(flat=False), workdays)
+        he.honorarium(request.form.to_dict(flat=False), workdays, user=current_user)
         return send_from_directory(directory='static', path='files/temp_files/tablica-honorari.xlsx')
     else:
         forms = []
@@ -166,6 +170,7 @@ def postavke():
         name = request.form.get('name')
         surname = request.form.get('surname')
         work_address = request.form.get('work_address')
+        home_address = request.form.get('home_address')
         travel_distance = request.form.get('travel_distance')
         if name != "":
             current_user.name = name
@@ -175,6 +180,9 @@ def postavke():
             db.session.commit()
         if work_address != "":
             current_user.work_address = work_address
+            db.session.commit()
+        if home_address != "":
+            current_user.home_address = home_address
             db.session.commit()
         if travel_distance != "":
             current_user.travel_distance = travel_distance

@@ -22,8 +22,13 @@
             {% for i in range(0, number_of_workdays) %}
             <tr>
                 <td class="no-padding text-center">{{workdays[i]}}</td>
-                <td>{{form.km_arrival(class='no-padding rounded')}}</td>
-                <td>{{form.km_return(class='no-padding rounded')}}</td>
+                {% if travel_distance != None %}
+                    <td>{{form.km_arrival(class='no-padding rounded text-center', value=travel_distance)}}</td>
+                    <td>{{form.km_return(class='no-padding rounded text-center', value=travel_distance)}}</td>
+                {% else %}
+                    <td>{{form.km_arrival(class='no-padding rounded text-center')}}</td>
+                    <td>{{form.km_return(class='no-padding rounded text-center')}}</td>
+                {% endif %}
                 <td>{{form.vehicle(class='no-padding rounded')}}</td>
                 <td><input class='no-padding rounded' name="{{i}}" onclick="change(this)" type="checkbox"></td>
             </tr>
