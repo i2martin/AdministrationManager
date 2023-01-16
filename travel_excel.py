@@ -1,5 +1,9 @@
 import openpyxl
 import shutil
+from datetime import datetime
+
+months_croatia = ["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan",
+                  "Listopad", "Studeni", "Prosinac"]
 
 list_of_cell_dates = ['A11', 'A12', 'A13', 'A14', 'A15', 'A16', 'A17', 'A18', 'A19', 'A20', 'A21', 'A22', 'A23', 'A24',
                       'A25', 'A26', 'A27', 'A28', 'A29', 'A30', 'A31', 'A32', 'A33']
@@ -37,6 +41,13 @@ def select_worksheet(workbook):
 
 # TODO: Save template data in memory and edit it instead of creating a copy
 def travel(data, workdays, user):
+    day_of_report = datetime.now().strftime("%d.%m.%Y.")
+    print(day_of_report)
+    current_month = months_croatia[datetime.now().month - 1]
+    current_year = datetime.now().year
+    print(current_month)
+    total_arrival = 0
+    total_return = 0
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
@@ -47,19 +58,18 @@ def travel(data, workdays, user):
     vehicle = data["vehicle"]
     del data["vehicle"]
     del data["submit"]
-    for key in data:
-        if key == "vehicle" or key == "km_return" or key == "km_arrival":
-            del [key]
     print(data)
     if len(data) > 0:
-        data_keys = list(data.keys())
+        data_keys = list(data.keys())  # convert dictionairy to list
         for i in range(0, len(data_keys)):
             worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]
             worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
+            total_arrival = total_arrival + int(km_arrival[int(data_keys[i])])
             worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
+            total_return = total_return + int(km_return[int(data_keys[i])])
             worksheet[vehicle_cells[i]] = vehicle[int(data_keys[i])]
 
-    #add user specific fields to excel table (if they are set)
+    # add user specific fields to excel table (if they are set)
     if user.work_address is not None:
         worksheet["B6"] = user.work_address
     if user.home_address is not None:
@@ -67,4 +77,9 @@ def travel(data, workdays, user):
     if user.name is not None and user.surname is not None:
         worksheet["C5"] = user.name + " " + user.surname
 
+    worksheet["B35"] = total_arrival
+    worksheet["C35"] = total_return
+    worksheet["D35"] = total_arrival + total_return
+    worksheet["C38"] = day_of_report
+    worksheet["A10"] = current_month + "/" + str(current_year)
     workbook.save(target)
