@@ -20,7 +20,7 @@
             <tbody>
 
             {% for i in range(0, number_of_workdays) %}
-            <tr>
+            <tr class="g-0">
                 <td class="no-padding text-center">{{workdays[i]}}</td>
                 {% if travel_distance != None %}
                     <td>{{form.km_arrival(class='no-padding rounded text-center', value=travel_distance)}}</td>
