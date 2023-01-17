@@ -78,7 +78,6 @@ class Honorari(FlaskForm):
 
 @app.route('/')
 def home():
-    flash('Logged in successfully.')
     return render_template('index.html')
 
 
@@ -108,10 +107,15 @@ def login():
         password = request.form.get('password')
         # Find user by username entered.
         user = User.query.filter_by(username=username).first()
-        # Check stored password hash against entered password hashed.
-        if check_password_hash(user.password, password):
+        # check if username and password are correct
+        if not user or not check_password_hash(user.password, password):
+            flash('Neispravno korisničko ime ili lozinka. Molimo pokušajte ponovno!')
+            return redirect(url_for('login'))
+        # username exists and password is correct
+        else:
             login_user(user)
-            return redirect(url_for('putni_troskovi'))
+            return redirect(url_for('postavke'))
+        # Check stored password hash against entered password hashed.
     return render_template('login.html')
 
 
