@@ -4,7 +4,7 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask import flash
 from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField
-# from wtforms.validators import DataRequired
+#from wtforms.validators import DataRequired, InputRequired, EqualTo
 import workdays as wd
 import honorarium_excel as he
 import travel_excel as te
@@ -58,6 +58,17 @@ class PutniTroskovi(FlaskForm):
     submit = SubmitField(label="Preuzmi", id='submit')
 
 
+class LoginForm(FlaskForm):
+    username = StringField('username')
+    password = StringField('password')
+
+
+class RegisterForm(FlaskForm):
+    username = StringField('username')
+    organisation = StringField('username')
+    password = StringField('password')
+    confirm_password = StringField('confirm_password')
+
 # TODO - add validators
 class Postavke(FlaskForm):
     name = StringField('arrival')
@@ -83,6 +94,7 @@ def home():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    form = RegisterForm()
     # TODO: Add checks (i.e. existing username) so that it doesn't crash
     if request.method == "POST":
         new_user = User(
@@ -91,12 +103,18 @@ def register():
                                             salt_length=8),
             organisation=request.form.get('organisation')
         )
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect(url_for('putni_troskovi'))
-
-    return render_template('register.html')
+        user = User.query.filter_by(username=new_user.username).first()
+        # check if username exists
+        if user:
+            flash('Korisničko ime već postoji. Odaberite drugo korisničko ime!')
+            return redirect(url_for('register'))
+        # username exists and password is correct
+        else:
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(user)
+            return redirect(url_for('postavke'))
+    return render_template('register.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -115,7 +133,6 @@ def login():
         else:
             login_user(user)
             return redirect(url_for('postavke'))
-        # Check stored password hash against entered password hashed.
     return render_template('login.html')
 
 
