@@ -9,19 +9,24 @@
         var password = document.getElementById("password").value;
         var confirmPassword = document.getElementById("confirm_password").value;
         var username = document.getElementById("username").value;
+        var username_error = document.getElementById("username-error")
+        var password_error = document.getElementById("password-error")
         var password_character_set =  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$/;
         if(username.length < 8)
         {
-            alert("Korisničko ime mora imati najmanje 8 znakova.");
+            username_error.style.visibility = "visible";
+            username_error.innerHTML = "Korisničko ime mora imati najmanje 8 znakova.";
             return false;
         }
         else if (!password.match(password_character_set))
         {
-            alert("Lozinka mora sadržavati između 8 i 30 znakova uključujući brojeve te velika i mala slova.");
+            password_error.style.visibility = "visible";
+            password_error.innerHTML = "Lozinka mora sadržavati između 8 i 30 znakova uključujući brojeve te velika i mala slova.";
+            return false;
         }
         else if (password != confirmPassword) {
-
-            alert("Lozinke se ne podudaraju");
+            password_error.style.visibility = "visible";
+            password_error.innerHTML = "Lozinke se ne podudaraju!";
             return false;
         }
         else
@@ -56,6 +61,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
+                                            <span id="username-error">1</span>
                                             {{form.username(class="form-control")}}
                                             <label class="form-label">Korisničko ime</label>
                                         </div>
@@ -72,6 +78,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
+                                            <span id="password-error">1</span>
                                             {{form.password(class="form-control")}}
                                             <label class="form-label">Lozinka</label>
                                         </div>
