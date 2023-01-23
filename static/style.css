@@ -72,8 +72,6 @@ ul
     padding-bottom: 2%;
 }
 
-
-
 .table{
     -moz-box-shadow: 0px 0px 15px 5px #404040;
     -webkit-box-shadow: 0px 0px 15px 5px #404040;
@@ -84,4 +82,37 @@ ul
 {
     visibility: hidden;
     color: red;
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1600px)
+{
+    .settings
+    {
+        margin: 10% 30% 10% 30%;
+    }
+
+}
+@media only screen and (min-width: 990px) and (max-width: 1200px)
+{
+    .settings
+    {
+        margin: 10% 25% 10% 25%;
+    }
+
+}
+@media only screen and (min-width: 800px) and (max-width: 990px)
+{
+    .settings
+    {
+        margin: 10% 20% 10% 20%;
+    }
+
+}
+@media only screen and (min-width: 300px) and (max-width: 800px)
+{
+    .settings
+    {
+        margin: 10% 2% 10% 2%;
+    }
+
 }
