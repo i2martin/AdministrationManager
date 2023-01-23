@@ -34,14 +34,15 @@ ul
 
 .custom_string_field
 {
-    border: 0;
+    border: 0; /*
     outline: 0;
     background: transparent;
     background-color: #DCDCDC;
     -moz-border-radius:10px; /* Firefox */
+    /*
     -webkit-border-radius: 10px; /* Safari, Chrome */
-    -khtml-border-radius: 10px; /* KHTML */
-    border-radius: 10px; /* CSS3 */
+    /*-khtml-border-radius: 10px; /* KHTML */
+    /*border-radius: 10px; /* CSS3 */
     border-bottom: 1px solid black;
 }
 .left
@@ -115,4 +116,10 @@ ul
         margin: 10% 2% 10% 2%;
     }
 
+}
+.add-shadow
+{
+    -moz-box-shadow: 0px 0px 15px 5px #404040;
+    -webkit-box-shadow: 0px 0px 15px 5px #404040;
+    box-shadow: 0px 0px 15px 10px #404040;
 }

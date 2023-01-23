@@ -4,14 +4,14 @@
 {% block content %}
 <div class="settings">
     <h1 class="text-center text-light" style="padding-bottom: 5%;"> Vaše postavke</h1>
-    <form action="{{url_for('postavke')}}" method="POST">
+    <form action="{{url_for('postavke')}}" method="POST" class="add-shadow">
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
                 <span class="left">Ime</span> <span
-                    class="right">{{form.name(class="custom_string_field text-center")}}</span>
+                    class="right">{{form.name(class="custom_string_field text-center", placeholder="Ivan")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Prezime</span> <span class="right">{{form.surname(class="custom_string_field text-center")}}</span>
+                <span class="left">Prezime</span> <span class="right">{{form.surname(class="custom_string_field text-center", placeholder="Horvat")}}</span>
             </li>
             <li class="list-group-item">
                 <span class="left">Adresa rada</span> <span class="right">{{form.work_address(size=30, class="custom_string_field text-center", placeholder="I.G.Kovačića 16, 20000, grad")}}</span>
