@@ -4,7 +4,6 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask import flash
 from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField
-#from wtforms.validators import DataRequired, InputRequired, EqualTo
 import workdays as wd
 import honorarium_excel as he
 import travel_excel as te
@@ -37,6 +36,7 @@ class User(UserMixin, db.Model):
     work_address = db.Column(db.String(100))
     home_address = db.Column(db.String(100))
     travel_distance = db.Column(db.Integer)
+    transportation_fee = db.Column(db.Float)
 
 
 with app.app_context():
@@ -77,6 +77,7 @@ class Postavke(FlaskForm):
     home_address = StringField('arrival')
     travel_distance = StringField('arrival')
     submit = SubmitField(label='Spremi', id='submit')
+    transportation_fee = StringField('transportation_fee')
 
 
 # TODO - add validators
@@ -193,6 +194,7 @@ def postavke():
         work_address = request.form.get('work_address')
         home_address = request.form.get('home_address')
         travel_distance = request.form.get('travel_distance')
+        transportation_fee = request.form.get('transportation_fee')
         if name != "":
             current_user.name = name
             db.session.commit()
@@ -208,6 +210,9 @@ def postavke():
         if travel_distance != "":
             current_user.travel_distance = travel_distance
             db.session.commit()
+        if transportation_fee != "":
+            current_user.transportation_fee = transportation_fee
+            db.session.commit();
         return redirect('putni')
     return render_template('postavke.html', form=form)
 

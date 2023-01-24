@@ -82,4 +82,9 @@ def travel(data, workdays, user):
     worksheet["D35"] = total_arrival + total_return
     worksheet["C38"] = day_of_report
     worksheet["A10"] = current_month + "/" + str(current_year)
+
+    if user.transportation_fee is not None:
+        worksheet["C39"] = user.transportation_fee
+        worksheet["D40"] = user.transportation_fee * (total_arrival + total_return)
+
     workbook.save(target)
