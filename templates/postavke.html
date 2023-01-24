@@ -4,8 +4,8 @@
 {% block content %}
 <div class="settings">
     <h1 class="text-center text-light" style="padding-bottom: 5%;"> Vaše postavke</h1>
-    <form action="{{url_for('postavke')}}" method="POST" class="add-shadow">
-        <ul class="list-group list-group-flush">
+    <form action="{{url_for('postavke')}}" method="POST" class="add-shadow" style="border-radius:10px;">
+        <ul class="list-group list-group-flush" style="border-radius: 10px;">
             <li class="list-group-item">
                 <span class="left">Ime</span> <span
                     class="right">{{form.name(class="custom_string_field text-center", placeholder="Ivan")}}</span>
