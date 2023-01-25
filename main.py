@@ -217,5 +217,10 @@ def postavke():
     return render_template('postavke.html', form=form)
 
 
+@app.route('/usluge', methods=['GET'])
+def pregled_usluga():
+    return render_template('usluge.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)

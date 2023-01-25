@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Pregled usluga{% endblock %}
+{% block content %}
+{% include 'header.html' %}
+<div class="d-flex justify-content-center container-fluid">
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('putni_troskovi')}}" role="button"
+       style="min-width: 300px; margin-top: 4%; margin-bottom: 2%;">Prijevoz</a>
+</div>
+<div class="d-flex justify-content-center container-fluid">
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('honorari')}}" role="button"
+       style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Honorari</a>
+</div>
+<div class="d-flex justify-content-center container-fluid">
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('postavke')}}" role="button"
+       style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Pregled inventara</a>
+</div>
+<div class="d-flex justify-content-center container-fluid">
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('putni_troskovi')}}" role="button"
+       style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Dodaj inventar</a>
+</div>
+<div class="d-flex justify-content-center container-fluid">
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('putni_troskovi')}}" role="button"
+       style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Postavke</a>
+</div>
+{% endblock %}
+{% block footer %}
+<footer class="footer1">
+    @Copyright Ivan Martinović 2023.
+</footer>
+{% endblock %}

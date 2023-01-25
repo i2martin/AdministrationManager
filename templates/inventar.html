@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Postavke{% endblock %}
+{% include 'header.html' %}
+{% block content %}
+
+<div class="settings">
+    <h1 class="text-center text-light" style="padding-bottom: 5%;"> Vaše postavke</h1>
+    <form onsubmit="return isNumber()" action="{{url_for('postavke')}}" method="POST" class="add-shadow" style="border-radius:10px;">
+        <ul class="list-group list-group-flush" style="border-radius: 10px;">
+            <li class="list-group-item">
+                <span class="left">Ime</span> <span
+                    class="right">{{form.name(class="custom_string_field text-center", placeholder="Ivan")}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="left">Prezime</span> <span class="right">{{form.surname(class="custom_string_field text-center", placeholder="Horvat")}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="left">Adresa rada</span> <span class="right">{{form.work_address(size=30, class="custom_string_field text-center", placeholder="I.G.Kovačića 16, 20000, grad")}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="left">Adresa stanovanja</span> <span class="right">{{form.home_address(size=30, class="custom_string_field text-center", placeholder="I.G.Kovačića 16, 20000, grad")}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="left">Udaljenost do radnog mjesta</span> <span class="right">{{form.travel_distance(class="custom_string_field text-center", placeholder="100")}}</span>
+            </li>
+            <li class="list-group-item">
+                <span class="left">Iznos naknade po km</span> <span class="right">{{form.transportation_fee(size=30, class="custom_string_field text-center", placeholder="0.3")}}</span>
+                <br>
+                <span style="visibility: hidden" class="left">Iznos naknade po km</span>
+                <span class="right" id="transportation_fee_error">1</span>
+            </li>
+            <div class="btn-custom justify-content-center align-content-center text-center" style="margin-top: 5%;">
+                {{form.submit(class='btn btn-primary btn-large col-3 text-light')}}
+            </div>
+        </ul>
+
+    </form>
+</div>
+{% endblock %}
+{% block footer %}
+<footer class="footer2">
+@Copyright Ivan Martinović 2023.
+</footer>
+{% endblock %}
