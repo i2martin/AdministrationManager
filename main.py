@@ -35,7 +35,7 @@ class User(UserMixin, db.Model):
     organisation = db.Column(db.String(100))
     work_address = db.Column(db.String(100))
     home_address = db.Column(db.String(100))
-    travel_distance = db.Column(db.Integer)
+    travel_distance = db.Column(db.Float)
     transportation_fee = db.Column(db.Float)
 
 
@@ -213,7 +213,7 @@ def postavke():
         if transportation_fee != "":
             current_user.transportation_fee = transportation_fee
             db.session.commit();
-        return redirect('pregled_usluga')
+        return redirect(url_for('pregled_usluga'))
     return render_template('postavke.html', form=form)
 
 

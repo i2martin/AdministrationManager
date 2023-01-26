@@ -145,7 +145,7 @@ ul
     padding-top: 1%;
     text-align: center;
 }
-#transportation_fee_error
+#transportation_fee_error, #travel_distance_error
 {
     visibility: hidden;
     color: red;

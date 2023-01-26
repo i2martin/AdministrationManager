@@ -64,9 +64,9 @@ def travel(data, workdays, user):
         for i in range(0, len(data_keys)):
             worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]
             worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
-            total_arrival = total_arrival + int(km_arrival[int(data_keys[i])])
+            total_arrival = total_arrival + float(km_arrival[int(data_keys[i])])
             worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
-            total_return = total_return + int(km_return[int(data_keys[i])])
+            total_return = total_return + float(km_return[int(data_keys[i])])
             worksheet[vehicle_cells[i]] = vehicle[int(data_keys[i])]
 
     # add user specific fields to excel table (if they are set)
