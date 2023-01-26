@@ -65,6 +65,7 @@ def honorarium(data, workdays, user):
             temp_hours = []
             temp = 0
     print(hours_rows)
+    total_hours = 0
     for i in range(0, len(subjects)):
         if subjects[i] != '':
             print(subject_cells[i])
@@ -77,6 +78,10 @@ def honorarium(data, workdays, user):
                 if hours_rows[i][j] != '':  # count total hours for each subject
                     total_count = total_count + int(hours_rows[i][j])
             worksheet[total_count_cells[i]] = total_count
+            total_hours = total_hours + total_count
+
+    if total_hours != 0:
+        worksheet[total_count_cells[5]] = total_hours
     if user.organisation is not None:
         worksheet["A3"] = user.organisation
     else:

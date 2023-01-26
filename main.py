@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, send_from_directory, redirect
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask import flash
-from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField
+from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField, PasswordField
 import workdays as wd
 import honorarium_excel as he
 import travel_excel as te
@@ -60,14 +60,14 @@ class PutniTroskovi(FlaskForm):
 
 class LoginForm(FlaskForm):
     username = StringField('username')
-    password = StringField('password')
+    password = PasswordField('password')
 
 
 class RegisterForm(FlaskForm):
     username = StringField('username')
     organisation = StringField('username')
-    password = StringField('password')
-    confirm_password = StringField('confirm_password')
+    password = PasswordField('password')
+    confirm_password = PasswordField('confirm_password')
 
 # TODO - add validators
 class Postavke(FlaskForm):
@@ -114,7 +114,7 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             login_user(user)
-            return redirect(url_for('postavke'))
+            return redirect(url_for('pregled_usluga'))
     return render_template('register.html', form=form)
 
 
@@ -133,7 +133,7 @@ def login():
         # username exists and password is correct
         else:
             login_user(user)
-            return redirect(url_for('postavke'))
+            return redirect(url_for('pregled_usluga'))
     return render_template('login.html')
 
 
@@ -213,7 +213,7 @@ def postavke():
         if transportation_fee != "":
             current_user.transportation_fee = transportation_fee
             db.session.commit();
-        return redirect('putni')
+        return redirect('pregled_usluga')
     return render_template('postavke.html', form=form)
 
 
