@@ -4,31 +4,48 @@
 {% block content %}
 
 <div class="settings">
-    <h1 class="text-center text-light" style="padding-bottom: 5%;"> Vaše postavke</h1>
-    <form onsubmit="return isNumber()" action="{{url_for('postavke')}}" method="POST" class="add-shadow" style="border-radius:10px;">
+    <h1 class="text-center text-light" style="padding-bottom: 5%;"> Dodavanje inventara</h1>
+    <div class="col-lg-12 col-xl-11">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if success %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                     {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    <form id="inventory" action="{{url_for('dodaj_inventar')}}" method="POST" class="add-shadow" style="border-radius:10px;">
         <ul class="list-group list-group-flush" style="border-radius: 10px;">
             <li class="list-group-item">
-                <span class="left">Ime</span> <span
-                    class="right">{{form.name(class="custom_string_field text-center", placeholder="Ivan")}}</span>
+                <span class="left">Inventarni broj</span> <span
+                    class="right">{{form.inventory_number(class="custom_string_field text-center", placeholder="108")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Prezime</span> <span class="right">{{form.surname(class="custom_string_field text-center", placeholder="Horvat")}}</span>
+                <span class="left">Naziv</span> <span class="right">{{form.name(size = 35, class="custom_string_field text-center", placeholder="Kutija šibica")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Adresa rada</span> <span class="right">{{form.work_address(size=30, class="custom_string_field text-center", placeholder="I.G.Kovačića 16, 20000, grad")}}</span>
+                <span class="left">Lokacija</span> <span class="right">{{form.location(size = 35, class="custom_string_field text-center", placeholder="Tajništvo")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Adresa stanovanja</span> <span class="right">{{form.home_address(size=30, class="custom_string_field text-center", placeholder="I.G.Kovačića 16, 20000, grad")}}</span>
+                <span class="left">Jedinica mjere</span> <span class="right">{{form.unit(size=20, class="custom_string_field text-center", placeholder="komad")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Udaljenost do radnog mjesta</span> <span class="right">{{form.travel_distance(class="custom_string_field text-center", placeholder="100")}}</span>
+                <span class="left">Količina</span> <span class="right">{{form.amount(size=20, class="custom_string_field text-center", placeholder="5")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Iznos naknade po km</span> <span class="right">{{form.transportation_fee(size=30, class="custom_string_field text-center", placeholder="0.3")}}</span>
-                <br>
-                <span style="visibility: hidden" class="left">Iznos naknade po km</span>
-                <span class="right" id="transportation_fee_error">1</span>
+                <span class="left">Procijenjena vrijednost</span> <span class="right">{{form.value(class="custom_string_field text-center", placeholder="100EUR")}}</span>
             </li>
+
             <div class="btn-custom justify-content-center align-content-center text-center" style="margin-top: 5%;">
                 {{form.submit(class='btn btn-primary btn-large col-3 text-light')}}
             </div>

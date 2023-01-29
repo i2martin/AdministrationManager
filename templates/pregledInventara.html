@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Pregled inventara{% endblock %}
+{% block content %}
+{% include 'header.html' %}
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  {% for location in locations %}
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id={{location}} data-bs-toggle="tab" data-bs-target={{location+"-pane"}} type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+        {{location}}</button>
+    </li>
+  {% endfor %}
+</ul>
+<div class="tab-content" id="myTabContent">
+  {% for location in locations %}
+  <div class="tab-pane fade show active text-light" id={{location+"-pane"}} role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+  <table class="table text-light">
+  <thead>
+    <tr>
+      <th scope="col">Inventarni broj</th>
+      <th scope="col">Naziv</th>
+      <th scope="col">Količina</th>
+      <th scope="col">Jedinica mjere</th>
+      <th scope="col">Vrijednost [EUR]</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+  </div>
+  {% endfor %}
+ </div>
+
+{% endblock %}

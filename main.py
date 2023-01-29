@@ -39,6 +39,27 @@ class User(UserMixin, db.Model):
     transportation_fee = db.Column(db.Float)
 
 
+class Inventory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    inventory_number = db.Column(db.String(100), unique=True)
+    name = db.Column(db.String(100))
+    unit = db.Column(db.String(100))
+    amount = db.Column(db.String(100))
+    value = db.Column(db.String(100))
+    location = db.Column(db.String(100))
+    organisation = db.Column(db.String(100))
+
+
+class InventoryForm(FlaskForm):
+    inventory_number = StringField('inventory_number')
+    name = StringField('name')
+    unit = StringField('unit')
+    amount = StringField('amount')
+    value = StringField('value')
+    location = StringField('location')
+    submit = SubmitField(label='Dodaj', id='submit')
+
+
 with app.app_context():
     Bootstrap(app)
     db.create_all()
@@ -69,7 +90,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField('password')
     confirm_password = PasswordField('confirm_password')
 
-# TODO - add validators
+
 class Postavke(FlaskForm):
     name = StringField('arrival')
     surname = StringField('arrival')
@@ -212,15 +233,55 @@ def postavke():
             db.session.commit()
         if transportation_fee != "":
             current_user.transportation_fee = transportation_fee
-            db.session.commit();
+            db.session.commit()
         return redirect(url_for('pregled_usluga'))
     return render_template('postavke.html', form=form)
 
 
 @app.route('/usluge', methods=['GET'])
+@login_required
 def pregled_usluga():
     return render_template('usluge.html')
 
 
+@app.route('/dodaj_inventar', methods=["GET", "POST"])
+@login_required
+def dodaj_inventar():
+    form = InventoryForm()
+    if request.method == 'POST':
+        if Inventory.query.filter_by(inventory_number=request.form.get('inventory_number')).first():
+            flash('Inventarni broj već postoji!')
+            return redirect(url_for('dodaj_inventar'))
+        else:
+            new_inventory = Inventory(
+                inventory_number=request.form.get('inventory_number'),
+                name=request.form.get('name'),
+                unit=request.form.get('unit'),
+                amount=request.form.get('amount'),
+                value=request.form.get('value'),
+                location=request.form.get('location'),
+                organisation=current_user.organisation)
+            db.session.add(new_inventory)
+            db.session.commit()
+            flash('Inventar je uspješno ažuriran!')
+        return redirect(url_for('dodaj_inventar', status="success"))
+    return render_template('inventar.html', form=form)
+
+@app.route("/pregled_inventara")
+def pregled_inventara():
+    #get complete inventory for users organisation
+    inventory = Inventory.query.filter_by(organisation = current_user.organisation).all()
+    #get list of specific locations
+    locations = []
+    inventory_by_location = []
+    for item in inventory:
+        if item.location not in locations:
+            inventory_list = []
+            locations.append(item.location)
+            #find all inventory by specific organisation and location
+            for i in Inventory.query.filter_by(organisation=current_user.organisation, location=item.location).all():
+                inventory_list.append(i)
+            inventory_by_location.append(inventory_list)
+    return render_template('pregledInventara.html', organisation = current_user.organisation, locations = locations, data = inventory_by_location)
 if __name__ == '__main__':
     app.run(debug=True)
