@@ -285,5 +285,10 @@ def pregled_inventara():
     return render_template('pregledInventara.html', organisation = current_user.organisation, locations = locations, data = inventory_by_location)
 
 
+#TODO: Add route to check inventory when scanning QR code
+
+
+#TODO:
+
 if __name__ == '__main__':
     app.run(debug=True)
