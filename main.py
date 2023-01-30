@@ -283,5 +283,7 @@ def pregled_inventara():
                 inventory_list.append(i)
             inventory_by_location.append(inventory_list)
     return render_template('pregledInventara.html', organisation = current_user.organisation, locations = locations, data = inventory_by_location)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
