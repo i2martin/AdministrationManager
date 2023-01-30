@@ -1,6 +1,7 @@
 import pandas
 import openpyxl
 import shutil
+from datetime import datetime, timedelta
 
 list_of_cell_dates = ["D10", "E10", "F10", "G10", "H10", "I10", "J10", "K10", "L10", "M10", "N10", "O10", "P10", "Q10",
                       "R10", "S10", "T10", "U10", "V10", "W10", "X10", "Y10", "Z10", "AA10"]
@@ -34,18 +35,19 @@ def select_worksheet(workbook):
 def get_row(i):
     if i == 0:
         return "12"
-    if i == 0:
+    if i == 1:
         return "13"
-    if i == 0:
+    if i == 2:
         return "14"
-    if i == 0:
+    if i == 3:
         return "15"
-    if i == 0:
+    if i == 4:
         return "16"
 
 
 # TODO: Save template data in memory and edit it instead of creating a copy
 def honorarium(data, workdays, user):
+    month_of_report = (datetime.utcnow().replace(day=1) - timedelta(days=1)).strftime("%m/%Y")
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)
@@ -64,7 +66,6 @@ def honorarium(data, workdays, user):
             hours_rows.append(temp_hours)
             temp_hours = []
             temp = 0
-    print(hours_rows)
     total_hours = 0
     for i in range(0, len(subjects)):
         if subjects[i] != '':
@@ -72,6 +73,7 @@ def honorarium(data, workdays, user):
             worksheet[subject_cells[i]] = subjects[i]
             worksheet[class_tag_cells[i]] = class_tags[i]
             row = get_row(i)
+            print(row)
             total_count = 0
             for j in range(0, len(honorarium_cell_columns)):  # loop through each hours list and add them to excel file
                 worksheet[honorarium_cell_columns[j] + row] = hours_rows[i][j]
@@ -92,4 +94,6 @@ def honorarium(data, workdays, user):
         worksheet["A4"] = user.work_address
     else:
         worksheet["A4"] = "Vaša adresa rada"
+    worksheet["K5"] = month_of_report
     workbook.save(target)
+
