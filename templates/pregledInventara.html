@@ -8,49 +8,56 @@
 </h1>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     {% for i in range (0, locations|length) %}
-        {% if i != 0 %}
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id={{locations[i]|replace(' ','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button" role="tab" aria-controls={{locations[i]|replace(' ','-')+'-tab-pane'}} aria-selected="true">
-            {{locations[i]}}</button>
-        </li>
-        {% else %}
-            <li class="nav-item" role="presentation">
-            <button class="nav-link active" id={{locations[i]|replace(' ','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button" role="tab" aria-controls={{locations[i]|replace(' ','-')+'-tab-pane'}} aria-selected="true">
-            {{locations[i]}}</button>
-        </li>
-        {% endif %}
+    {% if i != 0 %}
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id={{locations[i]|replace('
+        ','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button"
+        role="tab" aria-controls={{locations[i]|replace(' ','-')+'-tab-pane'}} aria-selected="true">
+        {{locations[i]}}</button>
+    </li>
+    {% else %}
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id={{locations[i]|replace('
+        ','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button"
+        role="tab" aria-controls={{locations[i]|replace(' ','-')+'-tab-pane'}} aria-selected="true">
+        {{locations[i]}}</button>
+    </li>
+    {% endif %}
     {% endfor %}
 </ul>
 <div class="tab-content" id="myTabContent">
     {% for i in range(0, locations|length) %}
-        {% if i != 0 %}
-            <div aria-labelledby={{locations[i]|replace(' ','-')+"-tab"}} class="tab-pane fade text-light" id={{locations[i]|replace(' ','-')+"-pane"}} role="tabpanel" tabindex="0">
-        {% else %}
-            <div aria-labelledby={{locations[i]|replace(' ','-')+"-tab"}} class="tab-pane fade active show text-light" id={{locations[i]|replace(' ','-')+"-pane"}} role="tabpanel" tabindex="0">
-        {% endif %}
-        <table class="table text-light">
-            <thead>
-            <tr>
-                <th scope="col">Inventarni broj</th>
-                <th scope="col">Naziv</th>
-                <th scope="col">Jedinica mjere</th>
-                <th scope="col">Količina</th>
-                <th scope="col">Vrijednost [EUR]</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for item in data[i] %}
-            <tr>
-                <td> {{item.inventory_number}}</td>
-                <td> {{item.name}}</td>
-                <td> {{item.unit}}</td>
-                <td> {{item.amount}}</td>
-                <td> {{item.value}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% if i != 0 %}
+    <div aria-labelledby={{locations[i]|replace('
+    ','-')+"-tab"}} class="tab-pane fade text-light" id={{locations[i]|replace(' ','-')+"-pane"}} role="tabpanel"
+    tabindex="0">
+    {% else %}
+    <div aria-labelledby={{locations[i]|replace('
+    ','-')+"-tab"}} class="tab-pane fade active show text-light" id={{locations[i]|replace(' ','-')+"-pane"}}
+    role="tabpanel" tabindex="0">
+    {% endif %}
+    <table class="table text-light">
+        <thead>
+        <tr>
+            <th scope="col">Inventarni broj</th>
+            <th scope="col">Naziv</th>
+            <th scope="col">Jedinica mjere</th>
+            <th scope="col">Količina</th>
+            <th scope="col">Vrijednost [EUR]</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in data[i] %}
+        <tr>
+            <td> {{item.inventory_number}}</td>
+            <td> {{item.name}}</td>
+            <td> {{item.unit}}</td>
+            <td> {{item.amount}}</td>
+            <td> {{item.value}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endfor %}
 {% endblock %}
