@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#"><img alt="Logo" class="img-fluid"
+        <a class="navbar-brand disabled"><img alt="Logo" class="img-fluid"
                                               src="{{url_for('static', filename='images/logo2.png')}}"
                                               style="height: 50px;"></a>
         <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
@@ -13,6 +13,9 @@
                 <li class="nav-item">
                     <a aria-current="page" class="nav-link active" href="{{url_for('pregled_usluga')}}"
                        style="color: #333333; transform:scale(1.4);"><i class="fa-sharp fa-solid fa-house"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for('pregled_usluga')}}">Usluge</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for('putni_troskovi')}}">Prijevoz</a>

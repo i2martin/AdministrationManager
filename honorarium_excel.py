@@ -47,7 +47,7 @@ def get_row(i):
 
 # TODO: Save template data in memory and edit it instead of creating a copy
 def honorarium(data, workdays, user):
-    month_of_report = (datetime.utcnow().replace(day=1) - timedelta(days=1)).strftime("%m/%Y")
+    month_of_report = datetime.utcnow().strftime("%m/%Y")
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
     workbook = open_workbook(target)
     worksheet = select_worksheet(workbook)

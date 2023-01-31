@@ -1,15 +1,17 @@
 from datetime import datetime
-from flask import Flask, render_template, request, send_from_directory, redirect, url_for
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask import flash
-from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField, PasswordField
+from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField, PasswordField, BooleanField
 import workdays as wd
 import honorarium_excel as he
 import travel_excel as te
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+import qrcode
+from io import BytesIO
 
 login_manager = LoginManager()
 app = Flask(__name__)
@@ -48,6 +50,7 @@ class Inventory(db.Model):
     value = db.Column(db.String(100))
     location = db.Column(db.String(100))
     organisation = db.Column(db.String(100))
+    item_status = db.Column(db.Boolean) #True if inventory check is active and item is checked
 
 
 class InventoryForm(FlaskForm):
@@ -58,6 +61,21 @@ class InventoryForm(FlaskForm):
     value = StringField('value')
     location = StringField('location')
     submit = SubmitField(label='Dodaj', id='submit')
+
+
+class InventoryCheckHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    organisation = db.Column(db.String(100))
+    inventory_check = db.Column(db.Boolean)  # True --> inventory check active
+    user_initiated_check = db.Column(db.String(100))
+    check_started_date = db.Column(db.String(100))
+    check_finished_date = db.Column(db.String(100))
+
+
+class InventoryCheckForm(FlaskForm):
+    start_check = SubmitField(label='Započni provjeru', id='start_check')
+    end_check = SubmitField(label='Završi provjeru', id='finish_check')
+    generate_qrs = SubmitField(label='Dohvati QR kodove', id='generate_qrs')
 
 
 with app.app_context():
@@ -268,7 +286,13 @@ def dodaj_inventar():
     return render_template('inventar.html', form=form)
 
 @app.route("/pregled_inventara")
+@login_required
 def pregled_inventara():
+    form = InventoryCheckForm()
+    if InventoryCheckHistory.query.filter_by(organisation = current_user.organisation).first():
+        status = InventoryCheckHistory.query.filter_by(organisation = current_user.organisation).first().inventory_check
+    else:
+        status = False
     #get complete inventory for users organisation
     inventory = Inventory.query.filter_by(organisation = current_user.organisation).all()
     #get list of specific locations
@@ -282,13 +306,58 @@ def pregled_inventara():
             for i in Inventory.query.filter_by(organisation=current_user.organisation, location=item.location).all():
                 inventory_list.append(i)
             inventory_by_location.append(inventory_list)
-    return render_template('pregledInventara.html', organisation = current_user.organisation, locations = locations, data = inventory_by_location)
+    return render_template('pregledInventara.html', organisation = current_user.organisation, locations = locations, data = inventory_by_location, status=status, form=form)
 
 
-# TODO: Add route to check inventory when scanning QR code
-# /organisation/location/inventory_number
 
-# TODO:
+@app.route('/inventory/<inventory_id>')
+def inventory_check(inventory_id):
+    item = Inventory.query.filter_by(inventory_number=inventory_id).first()
+    if item:
+        return render_template('itemStatus.html', name=item.name)
+    else:
+        return render_template('itemStatus.html')
+
+
+@app.route('/inventory_check_status')
+@login_required
+def inventory_check_status():
+    print(list(request.form))
+    record = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first()
+    if record is 'NoneType':
+        new_check = InventoryCheckHistory(
+        organisation = current_user.organisation,
+        inventory_check = True,
+        user_initiated_check = current_user.username,
+        check_started_date = datetime.utcnow(),
+        check_finished_date = "")
+        db.session.add(new_check)
+        db.session.commit()
+    elif record.inventory_check is not True:
+        record.inventory_check = True
+        db.session.commit()
+        record.check_started_Date = datetime.utcnow()
+        db.session.commit()
+        record.check_finished_Date = ""
+        db.session.commit()
+    else:
+        record.inventory_check = False
+        record.check_finished_Date = datetime.utcnow()
+        db.session.commit()
+    return redirect('pregled_inventara')
+
+
+@app.route('/generate_qr_codes')
+@login_required
+def generate_qr_codes():
+    data = Inventory.query.filter_by(organisation = current_user.organisation).first()
+    buffer = BytesIO()
+    img = qrcode.make("127.0.0.1:5000/inventory/" + data.inventory_number)
+    img.save(buffer)
+    buffer.seek(0)
+    response = send_file(buffer, mimetype='image/png')
+    return response
+
 
 if __name__ == '__main__':
     app.run(debug=True)

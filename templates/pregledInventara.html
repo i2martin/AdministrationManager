@@ -6,6 +6,19 @@
 <h1 class="text-center text-light" style="margin-top: 3%; margin-bottom: 3%;">
     Pregled inventara - {{organisation}}
 </h1>
+<div class="text-center" style="margin-bottom: 2%;">
+{{form.csrf_token}}
+    <form style="display: inline;" action="{{url_for('generate_qr_codes')}}">
+{{form.generate_qrs(class='btn btn-lg btn-primary')}}
+        </form>
+    <form style="display: inline;" action="{{url_for('inventory_check_status')}}">
+{% if status == False %}
+    {{form.start_check(class='btn btn-lg btn-primary')}}
+{% else %}
+    {{form.end_check(class='btn btn-lg btn-primary')}}
+        </form>
+{% endif %}
+</div>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     {% for i in range (0, locations|length) %}
     {% if i != 0 %}
