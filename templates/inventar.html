@@ -13,19 +13,25 @@
         var amount_error = document.getElementById('amount_error');
         if (isNaN(inventory_number))
         {
-            inventory_number_error.style.visibility = "visible";
+            inventory_number_error.style.display = "inherit";
+            value_error.style.visibility = "hidden";
+            amount_error.style.visibility = "hidden";
             inventory_number_error.innerHTML = 'Niste unijeli ispravan broj!';
             return false;
         }
         else if (isNaN(value))
         {
             value_error.style.visibility = "visible";
+            inventory_number_error.style.visibility = "hidden";
+            amount_error.style.visibility = "hidden";
             value_error.innerHTML = 'Niste unijeli ispravnu vrijednost!';
             return false;
         }
         else if (isNaN(amount))
         {
             amount_error.style.visibility = "visible";
+            value_error.style.visibility = "hidden";
+            inventory_number_error.style.visibility = "hidden";
             amount_error.innerHTML = 'Niste unijeli ispravnu količinu!';
             return false;
         }
@@ -62,7 +68,7 @@
                 <span class="left">Inventarni broj</span> <span
                     class="right">{{form.inventory_number(class="custom_string_field text-center", placeholder="108",  oninvalid="this.setCustomValidity('Inventarni broj je obavezan!')", oninput="this.setCustomValidity('')", required="True")}}</span>
                 <br>
-                <span style="visibility: hidden" class="left">...............................</span>
+                <span style="visibility: hidden" class="left">................354354...........</span>
                 <span class="right" id="inventory_number_error"></span>
             </li>
             <li class="list-group-item">
@@ -77,13 +83,13 @@
             <li class="list-group-item">
                 <span class="left">Količina</span> <span class="right">{{form.amount(size=20, class="custom_string_field text-center", placeholder="5",  oninvalid="this.setCustomValidity('Količina je obavezna!')", oninput="this.setCustomValidity('')", required="True")}}</span>
                 <br>
-                <span style="visibility: hidden" class="left">...............................</span>
+                <span style="visibility: hidden" class="left">...............6555555................</span>
                 <span class="right" id="amount_error"></span>
             </li>
             <li class="list-group-item">
                 <span class="left">Procijenjena vrijednost</span> <span class="right">{{form.value(class="custom_string_field text-center", placeholder="100EUR",  oninvalid="this.setCustomValidity('Vrijednost je obavezna!')", oninput="this.setCustomValidity('')", required="True")}}</span>
                 <br>
-                <span style="visibility: hidden" class="left">...............................</span>
+                <span style="visibility: hidden" class="left">..............453543.............</span>
                 <span class="right" id="value_error"></span>
             </li>
 

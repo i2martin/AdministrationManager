@@ -42,10 +42,8 @@ def select_worksheet(workbook):
 # TODO: Save template data in memory and edit it instead of creating a copy
 def travel(data, workdays, user):
     day_of_report = datetime.now().strftime("%d.%m.%Y.")
-    print(day_of_report)
     current_month = months_croatia[datetime.now().month - 1]
     current_year = datetime.now().year
-    print(current_month)
     total_arrival = 0
     total_return = 0
     shutil.copyfile(original, target)  # create a duplicate of .xls and open it
@@ -58,7 +56,6 @@ def travel(data, workdays, user):
     vehicle = data["vehicle"]
     del data["vehicle"]
     del data["submit"]
-    print(data)
     if len(data) > 0:
         data_keys = list(data.keys())  # convert dictionairy to list
         for i in range(0, len(data_keys)):

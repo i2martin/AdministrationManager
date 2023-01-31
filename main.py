@@ -277,7 +277,8 @@ def dodaj_inventar():
                 amount=request.form.get('amount'),
                 value=request.form.get('value'),
                 location=request.form.get('location'),
-                organisation=current_user.organisation)
+                organisation=current_user.organisation,
+                item_status=False)
             db.session.add(new_inventory)
             db.session.commit()
             flash('Inventar je uspješno ažuriran!')
@@ -321,9 +322,7 @@ def inventory_check(inventory_id):
 @app.route('/inventory_check_status')
 @login_required
 def inventory_check_status():
-    print(list(request.form))
     record = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first()
-    print(record)
     if record is None or record is 'None' or record is 'NoneType':
         new_check = InventoryCheckHistory(
         organisation = current_user.organisation,
@@ -355,7 +354,6 @@ def generate_qr_codes():
         img = img.resize(size=(60,60)) # TODO: this might cause a problem with size
         qrcodes.append(img)
     file = 'static/files/qrcodes.pdf'
-    print(len(qrcodes))
     if len(qrcodes) > 0:
         qrcodes[0].save(file, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[0:])
         response = send_file(file, mimetype='application/pdf')

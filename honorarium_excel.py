@@ -69,11 +69,9 @@ def honorarium(data, workdays, user):
     total_hours = 0
     for i in range(0, len(subjects)):
         if subjects[i] != '':
-            print(subject_cells[i])
             worksheet[subject_cells[i]] = subjects[i]
             worksheet[class_tag_cells[i]] = class_tags[i]
             row = get_row(i)
-            print(row)
             total_count = 0
             for j in range(0, len(honorarium_cell_columns)):  # loop through each hours list and add them to excel file
                 worksheet[honorarium_cell_columns[j] + row] = hours_rows[i][j]
