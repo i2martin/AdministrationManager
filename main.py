@@ -11,7 +11,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 import qrcode
-from io import BytesIO
 
 login_manager = LoginManager()
 app = Flask(__name__)
@@ -324,7 +323,8 @@ def inventory_check(inventory_id):
 def inventory_check_status():
     print(list(request.form))
     record = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first()
-    if record == 'NoneType':
+    print(record)
+    if record is None or record is 'None' or record is 'NoneType':
         new_check = InventoryCheckHistory(
         organisation = current_user.organisation,
         inventory_check = True,
@@ -340,7 +340,7 @@ def inventory_check_status():
         db.session.commit()
     else:
         record.inventory_check = False
-        record.check_finished_Date = datetime.utcnow()
+        record.check_finished_date = datetime.utcnow()
         db.session.commit()
     return redirect('pregled_inventara')
 
@@ -351,14 +351,17 @@ def generate_qr_codes():
     data = Inventory.query.filter_by(organisation = current_user.organisation).all()
     qrcodes = []
     for i in range(0, len(data)):
-        print(data[i].inventory_number)
         img = qrcode.make("127.0.0.1:5000/inventory/" + data[i].inventory_number)
         img = img.resize(size=(60,60)) # TODO: this might cause a problem with size
         qrcodes.append(img)
     file = 'static/files/qrcodes.pdf'
-    qrcodes.save(file, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[1:])
-    response = send_file(file, mimetype='application/pdf')
-    return response
+    print(len(qrcodes))
+    if len(qrcodes) > 0:
+        qrcodes[0].save(file, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[0:])
+        response = send_file(file, mimetype='application/pdf')
+        return response
+    else:
+        return redirect('pregled_inventara')
 
 
 if __name__ == '__main__':
