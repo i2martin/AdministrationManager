@@ -49,7 +49,7 @@ class Inventory(db.Model):
     value = db.Column(db.String(100))
     location = db.Column(db.String(100))
     organisation = db.Column(db.String(100))
-    item_status = db.Column(db.Boolean) #True if inventory check is active and item is checked
+    item_status = db.Column(db.Boolean)  # True if inventory check is active and item is checked
 
 
 class InventoryForm(FlaskForm):
@@ -285,35 +285,40 @@ def dodaj_inventar():
         return redirect(url_for('dodaj_inventar', status="success"))
     return render_template('inventar.html', form=form)
 
+
 @app.route("/pregled_inventara")
 @login_required
 def pregled_inventara():
     form = InventoryCheckForm()
-    if InventoryCheckHistory.query.filter_by(organisation = current_user.organisation).first():
-        status = InventoryCheckHistory.query.filter_by(organisation = current_user.organisation).first().inventory_check
+    if InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first():
+        status = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first().inventory_check
     else:
         status = False
-    #get complete inventory for users organisation
-    inventory = Inventory.query.filter_by(organisation = current_user.organisation).all()
-    #get list of specific locations
+    # get complete inventory for users organisation
+    inventory = Inventory.query.filter_by(organisation=current_user.organisation).all()
+    # get list of specific locations
     locations = []
     inventory_by_location = []
     for item in inventory:
         if item.location not in locations:
             inventory_list = []
             locations.append(item.location)
-            #find all inventory by specific organisation and location
+            # find all inventory by specific organisation and location
             for i in Inventory.query.filter_by(organisation=current_user.organisation, location=item.location).all():
                 inventory_list.append(i)
             inventory_by_location.append(inventory_list)
-    return render_template('pregledInventara.html', organisation = current_user.organisation, locations = locations, data = inventory_by_location, status=status, form=form)
-
+    return render_template('pregledInventara.html', organisation=current_user.organisation, locations=locations,
+                           data=inventory_by_location, status=status, form=form)
 
 
 @app.route('/inventory/<inventory_id>')
 def inventory_check(inventory_id):
     item = Inventory.query.filter_by(inventory_number=inventory_id).first()
-    if item:
+    if item and InventoryCheckHistory.query.filter_by(
+            organisation=current_user.organisation).first().inventory_check is True:
+        # update item status to checked (True)
+        item.item_status = True
+        db.session.commit()
         return render_template('itemStatus.html', name=item.name)
     else:
         return render_template('itemStatus.html')
@@ -325,11 +330,11 @@ def inventory_check_status():
     record = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first()
     if record is None or record is 'None' or record is 'NoneType':
         new_check = InventoryCheckHistory(
-        organisation = current_user.organisation,
-        inventory_check = True,
-        user_initiated_check = current_user.username,
-        check_started_date = datetime.utcnow(),
-        check_finished_date = "")
+            organisation=current_user.organisation,
+            inventory_check=True,
+            user_initiated_check=current_user.username,
+            check_started_date=datetime.utcnow(),
+            check_finished_date="")
         db.session.add(new_check)
         db.session.commit()
     elif record.inventory_check is not True:
@@ -341,17 +346,19 @@ def inventory_check_status():
         record.inventory_check = False
         record.check_finished_date = datetime.utcnow()
         db.session.commit()
+        # TODO: print inventory check report --> missing/unchecked items (maybe ask to finish it with missing items
+        #  or not?)
     return redirect('pregled_inventara')
 
 
 @app.route('/generate_qr_codes')
 @login_required
 def generate_qr_codes():
-    data = Inventory.query.filter_by(organisation = current_user.organisation).all()
+    data = Inventory.query.filter_by(organisation=current_user.organisation).all()
     qrcodes = []
     for i in range(0, len(data)):
         img = qrcode.make("127.0.0.1:5000/inventory/" + data[i].inventory_number)
-        img = img.resize(size=(60,60)) # TODO: this might cause a problem with size
+        img = img.resize(size=(60, 60))  # TODO: this might cause a problem with size
         qrcodes.append(img)
     file = 'static/files/qrcodes.pdf'
     if len(qrcodes) > 0:

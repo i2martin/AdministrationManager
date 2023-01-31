@@ -13,7 +13,7 @@
         var amount_error = document.getElementById('amount_error');
         if (isNaN(inventory_number))
         {
-            inventory_number_error.style.display = "inherit";
+            inventory_number_error.style.visibility = "visible";
             value_error.style.visibility = "hidden";
             amount_error.style.visibility = "hidden";
             inventory_number_error.innerHTML = 'Niste unijeli ispravan broj!';
