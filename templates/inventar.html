@@ -28,22 +28,22 @@
         <ul class="list-group list-group-flush" style="border-radius: 10px;">
             <li class="list-group-item">
                 <span class="left">Inventarni broj</span> <span
-                    class="right">{{form.inventory_number(class="custom_string_field text-center", placeholder="108")}}</span>
+                    class="right">{{form.inventory_number(class="custom_string_field text-center", placeholder="108",  oninvalid="this.setCustomValidity('Inventarni broj je obavezan!')", oninput="this.setCustomValidity('')", required="True")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Naziv</span> <span class="right">{{form.name(size = 35, class="custom_string_field text-center", placeholder="Kutija šibica")}}</span>
+                <span class="left">Naziv</span> <span class="right">{{form.name(size = 35, class="custom_string_field text-center", placeholder="Kutija šibica", oninvalid="this.setCustomValidity('Naziv je obavezan!')", oninput="this.setCustomValidity('')", required="True")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Lokacija</span> <span class="right">{{form.location(size = 35, class="custom_string_field text-center", placeholder="Tajništvo")}}</span>
+                <span class="left">Lokacija</span> <span class="right">{{form.location(size = 35, class="custom_string_field text-center", placeholder="Tajništvo", oninvalid="this.setCustomValidity('Lokacija je obavezna!')", oninput="this.setCustomValidity('')", required="True")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Jedinica mjere</span> <span class="right">{{form.unit(size=20, class="custom_string_field text-center", placeholder="komad")}}</span>
+                <span class="left">Jedinica mjere</span> <span class="right">{{form.unit(size=20, class="custom_string_field text-center", placeholder="komad", oninvalid="this.setCustomValidity('Jedinica mjere je obavezna!')", oninput="this.setCustomValidity('')", required="True")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Količina</span> <span class="right">{{form.amount(size=20, class="custom_string_field text-center", placeholder="5")}}</span>
+                <span class="left">Količina</span> <span class="right">{{form.amount(size=20, class="custom_string_field text-center", placeholder="5",  oninvalid="this.setCustomValidity('Količina je obavezna!')", oninput="this.setCustomValidity('')", required="True")}}</span>
             </li>
             <li class="list-group-item">
-                <span class="left">Procijenjena vrijednost</span> <span class="right">{{form.value(class="custom_string_field text-center", placeholder="100EUR")}}</span>
+                <span class="left">Procijenjena vrijednost</span> <span class="right">{{form.value(class="custom_string_field text-center", placeholder="100EUR",  oninvalid="this.setCustomValidity('Vrijednost je obavezna!')", oninput="this.setCustomValidity('')", required="True")}}</span>
             </li>
 
             <div class="btn-custom justify-content-center align-content-center text-center" style="margin-top: 5%;">
