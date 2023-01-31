@@ -324,7 +324,7 @@ def inventory_check(inventory_id):
 def inventory_check_status():
     print(list(request.form))
     record = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first()
-    if record is 'NoneType':
+    if record == 'NoneType':
         new_check = InventoryCheckHistory(
         organisation = current_user.organisation,
         inventory_check = True,
@@ -335,10 +335,8 @@ def inventory_check_status():
         db.session.commit()
     elif record.inventory_check is not True:
         record.inventory_check = True
-        db.session.commit()
-        record.check_started_Date = datetime.utcnow()
-        db.session.commit()
-        record.check_finished_Date = ""
+        record.check_started_date = datetime.utcnow()
+        record.check_finished_date = ""
         db.session.commit()
     else:
         record.inventory_check = False
@@ -350,12 +348,16 @@ def inventory_check_status():
 @app.route('/generate_qr_codes')
 @login_required
 def generate_qr_codes():
-    data = Inventory.query.filter_by(organisation = current_user.organisation).first()
-    buffer = BytesIO()
-    img = qrcode.make("127.0.0.1:5000/inventory/" + data.inventory_number)
-    img.save(buffer)
-    buffer.seek(0)
-    response = send_file(buffer, mimetype='image/png')
+    data = Inventory.query.filter_by(organisation = current_user.organisation).all()
+    qrcodes = []
+    for i in range(0, len(data)):
+        print(data[i].inventory_number)
+        img = qrcode.make("127.0.0.1:5000/inventory/" + data[i].inventory_number)
+        img = img.resize(size=(60,60)) # TODO: this might cause a problem with size
+        qrcodes.append(img)
+    file = 'static/files/qrcodes.pdf'
+    qrcodes.save(file, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[1:])
+    response = send_file(file, mimetype='application/pdf')
     return response
 
 
