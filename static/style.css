@@ -150,3 +150,8 @@ ul
     visibility: hidden;
     color: red;
 }
+
+.image-status
+{
+    width: 20px;
+}

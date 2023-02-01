@@ -57,6 +57,9 @@
             <th scope="col">Jedinica mjere</th>
             <th scope="col">Količina</th>
             <th scope="col">Vrijednost [EUR]</th>
+            {% if status == True %}
+            <th scope="col"> Status</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -67,6 +70,17 @@
             <td> {{item.unit}}</td>
             <td> {{item.amount}}</td>
             <td> {{item.value}}</td>
+            {% if status == True %}
+                {% if item.item_status == True %}
+                    <td>
+                        <img class="image-status" src="{{url_for('static',filename='images/found.PNG')}}" alt="">
+                    </td>
+                {% else %}
+                    <td>
+                        <img class="image-status" src="{{url_for('static',filename='images/missing.PNG')}}" alt="">
+                    </td>
+                {% endif %}
+            {% endif %}
         </tr>
         {% endfor %}
         </tbody>

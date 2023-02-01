@@ -348,6 +348,12 @@ def inventory_check_status():
         db.session.commit()
         # TODO: print inventory check report --> missing/unchecked items (maybe ask to finish it with missing items
         #  or not?)
+
+        # loop through all the inventory items and change their status to unchecked --> False
+        items = Inventory.query.filter_by(organisation=current_user.organisation).all()
+        for item in items:
+            item.item_status = False
+            db.session.commit()
     return redirect('pregled_inventara')
 
 
