@@ -23,15 +23,13 @@
     {% for i in range (0, locations|length) %}
     {% if i != 0 %}
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id={{locations[i]|replace('
-        ','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button"
+        <button class="nav-link" id={{locations[i]|replace('','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button"
         role="tab" aria-controls={{locations[i]|replace(' ','-')+'-tab-pane'}} aria-selected="true">
         {{locations[i]}}</button>
     </li>
     {% else %}
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id={{locations[i]|replace('
-        ','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button"
+        <button class="nav-link active" id={{locations[i]|replace('','-')+'-tab'}} data-bs-toggle="tab" data-bs-target={{"#"+locations[i]|replace(' ','-')+'-pane'}} type="button"
         role="tab" aria-controls={{locations[i]|replace(' ','-')+'-tab-pane'}} aria-selected="true">
         {{locations[i]}}</button>
     </li>
@@ -41,12 +39,10 @@
 <div class="tab-content" id="myTabContent">
     {% for i in range(0, locations|length) %}
     {% if i != 0 %}
-    <div aria-labelledby={{locations[i]|replace('
-    ','-')+"-tab"}} class="tab-pane fade text-light" id={{locations[i]|replace(' ','-')+"-pane"}} role="tabpanel"
+    <div aria-labelledby={{locations[i]|replace('','-')+"-tab"}} class="tab-pane fade text-light" id={{locations[i]|replace(' ','-')+"-pane"}} role="tabpanel"
     tabindex="0">
     {% else %}
-    <div aria-labelledby={{locations[i]|replace('
-    ','-')+"-tab"}} class="tab-pane fade active show text-light" id={{locations[i]|replace(' ','-')+"-pane"}}
+    <div aria-labelledby={{locations[i]|replace('','-')+"-tab"}} class="tab-pane fade active show text-light" id={{locations[i]|replace(' ','-')+"-pane"}}
     role="tabpanel" tabindex="0">
     {% endif %}
     <table class="table text-light">
