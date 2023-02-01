@@ -5,35 +5,23 @@
 </header>
 {% block content %}
 <script type="text/javascript">
-    function Validate() {
-        var password = document.getElementById("password").value;
-        var confirmPassword = document.getElementById("confirm_password").value;
-        var username = document.getElementById("username").value;
-        var username_error = document.getElementById("username-error")
-        var password_error = document.getElementById("password-error")
-        var password_character_set =  /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$/;
-        if(username.length < 8)
-        {
-            username_error.style.visibility = "visible";
-            username_error.innerHTML = "Korisničko ime mora imati najmanje 8 znakova.";
-            return false;
-        }
-        else if (!password.match(password_character_set))
-        {
-            password_error.style.visibility = "visible";
-            password_error.innerHTML = "Lozinka mora sadržavati između 8 i 30 znakova uključujući brojeve te velika i mala slova.";
-            return false;
-        }
-        else if (password != confirmPassword) {
-            password_error.style.visibility = "visible";
-            password_error.innerHTML = "Lozinke se ne podudaraju!";
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+function validate()
+{
+    var password = document.getElementById('password').value;
+    var confirm_password = document.getElementById('confirm_password').value;
+    var password_error = document.getElementById("password-error");
+    if (password != confirm_password)
+    {
+        password_error.style.visibility = "visible";
+        password_error.innerHTML = "Lozinke se ne podudaraju!";
+        return false;
     }
+    else
+    {
+        password_error.style.visibility = "visible";
+        return true;
+    }
+}
 </script>
 <section class="vh-100">
     <div class="container h-100">
@@ -56,13 +44,13 @@
 
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Registracija</p>
 
-                                <form action="{{ url_for('register') }}" class="mx-1 mx-md-4" method="post" novalidate>
+                                <form action="{{ url_for('register') }}" class="mx-1 mx-md-4" method="post">
                                 {{ form.csrf_token }}
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <span id="username-error">1</span>
-                                            {{form.username(class="form-control")}}
+                                            {{form.username(class="form-control", pattern=".{8,30}", title="Korisničko ime mora sadržavati 8-30 znakova.", required="True")}}
                                             <label class="form-label">Korisničko ime</label>
                                         </div>
                                     </div>
@@ -70,7 +58,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
-                                            {{form.organisation(class="form-control")}}
+                                            {{form.organisation(class="form-control", required="True")}}
                                             <label class="form-label">Organizacija</label>
                                         </div>
                                     </div>
@@ -79,7 +67,7 @@
                                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <span id="password-error">1</span>
-                                            {{form.password(class="form-control")}}
+                                            {{form.password(class="form-control", pattern="(?=.*\d)(?=.*[a-z,č,š,ć,đ,ž])(?=.*[A-Z,Č,Ć,Š,Đ,Ž]).{8,30}", title="Lozinka mora sadržavati 8-30 znakova uključujući mala i velika slova i brojeve.", required="True")}}
                                             <label class="form-label">Lozinka</label>
                                         </div>
                                     </div>
@@ -87,7 +75,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
-                                            {{form.confirm_password(class="form-control")}}
+                                            {{form.confirm_password(class="form-control", pattern="(?=.*\d)(?=.*[a-z,č,š,ć,đ,ž])(?=.*[A-Z,Č,Ć,Š,Đ,Ž]).{8,30}", title="Lozinka mora sadržavati 8-30 znakova uključujući mala i velika slova i brojeve.", required="True")}}
                                             <label class="form-label">Ponovi lozinku</label>
                                         </div>
                                     </div>
@@ -101,7 +89,7 @@
                                     </div>
 
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                        <input class="btn btn-primary btn-lg" type="submit" onclick="return Validate()"></input>
+                                        <input class="btn btn-primary btn-lg" type="submit" onclick="return validate()"></input>
                                     </div>
 
                                 </form>

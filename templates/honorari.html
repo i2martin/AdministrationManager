@@ -24,10 +24,10 @@
             <tbody>
             {% for form in forms %}
             <tr>
-                <td>{{form.subject}}</td>
+                <td>{{form.subject(pattern=".{3,10}", title='Nastavni predmet mora sadržavati najmanje 3 znaka.')}}</td>
                 <td>{{form.class_tag(size = 5)}}</td>
                 {% for i in range(0,number_of_workdays) %}
-                <td>{{form.hours(size=1,class="text-center")}}</td>
+                <td>{{form.hours(size=1,class="text-center", pattern="[0-9]{1,2}", title="Cijeli broj s do dvije znamenke.")}}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
