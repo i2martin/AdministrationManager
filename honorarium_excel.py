@@ -2,6 +2,8 @@ from io import BytesIO, StringIO
 from os.path import isfile
 import openpyxl
 from datetime import datetime
+
+from flask import send_file
 from requests import get
 
 list_of_cell_dates = ["D10", "E10", "F10", "G10", "H10", "I10", "J10", "K10", "L10", "M10", "N10", "O10", "P10", "Q10",
@@ -31,9 +33,11 @@ def select_worksheet(workbook):
 
 def honorarium(data, workdays, user):
     month_of_report = datetime.utcnow().strftime("%m/%Y")
+    print(data)
     if isfile(filename):
         # TODO: find a better way to link to a file
         request = get('http://127.0.0.1:5000/static/files/tablica-honorari.xlsx')
+        print(request)
         buffer = BytesIO(request.content)
         workbook = open_workbook(buffer)
         worksheet = select_worksheet(workbook)
@@ -48,7 +52,7 @@ def honorarium(data, workdays, user):
         for hour in hours:  # split list of hours into 5 list of max 24 elements (max. 24 workdays per subject)
             temp_hours.append(hour)
             temp = temp + 1
-            if temp == 24:
+            if temp == len(workdays):
                 hours_rows.append(temp_hours)
                 temp_hours = []
                 temp = 0
@@ -59,7 +63,7 @@ def honorarium(data, workdays, user):
                 worksheet[class_tag_cells[i]] = class_tags[i]
                 row = str(12 + i)
                 total_count = 0
-                for j in range(0, len(honorarium_cell_columns)):  # loop through each hours list and add them to excel file
+                for j in range(0, len(workdays)):  # loop through each hours list and add them to excel file
                     worksheet[honorarium_cell_columns[j] + row] = hours_rows[i][j]
                     if hours_rows[i][j] != '':  # count total hours for each subject
                         total_count = total_count + int(hours_rows[i][j])
@@ -79,6 +83,10 @@ def honorarium(data, workdays, user):
         else:
             worksheet["A4"] = "Vaša adresa rada"
         worksheet["K5"] = month_of_report
-        workbook.save(target)
-        buffer.close()
+        buffer.seek(0)
+        buffer2 = BytesIO()
+        workbook.save(buffer2)
+        buffer2.seek(0)
+        return send_file(BytesIO(buffer2.read()), mimetype="application/vnd.ms-excel", download_name="honorari.xlsx", as_attachment=True)
+
 

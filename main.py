@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file
 from flask_bootstrap import Bootstrap
@@ -212,8 +213,9 @@ def honorari():
     workdays = wd.only_date(workdays)
     number_of_workdays = len(workdays)
     if request.method == 'POST':
-        he.honorarium(request.form.to_dict(flat=False), workdays, user=current_user)
-        return send_from_directory(directory='static', path='files/temp_files/tablica-honorari.xlsx')
+        return he.honorarium(request.form.to_dict(flat=False), workdays, user=current_user)
+        #return send_from_directory(directory='static', path='files/temp_files/tablica-honorari.xlsx')
+        #return redirect((url_for('honorari')))
     else:
         forms = []
         for i in range(0, 5):
