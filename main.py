@@ -175,7 +175,7 @@ def login():
         # username exists and password is correct
         else:
             login_user(user)
-            return redirect(url_for('pregled_usluga'))
+            return redirect(url_for('view_services'))
     return render_template('login.html')
 
 
@@ -185,9 +185,9 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/putni', methods=['GET', 'POST'])
+@app.route('/travel_expense', methods=['GET', 'POST'])
 @login_required
-def putni_troskovi():
+def travel_expense():
     workdays = []
     year = datetime.now().year
     month = datetime.now().month
@@ -200,13 +200,13 @@ def putni_troskovi():
         return send_from_directory(directory='static', path='files/temp_files/tablica-prijevoz.xlsx')
     else:
         form = PutniTroskovi()
-        return render_template('putni.html', form=form, workdays=workdays, number_of_workdays=number_of_workdays,
+        return render_template('travel.html', form=form, workdays=workdays, number_of_workdays=number_of_workdays,
                                travel_distance=current_user.travel_distance)
 
 
-@app.route('/honorari', methods=['GET', 'POST'])
+@app.route('/honorarium', methods=['GET', 'POST'])
 @login_required
-def honorari():
+def honorarium():
     workdays = []
     year = datetime.now().year
     month = datetime.now().month
@@ -224,12 +224,12 @@ def honorari():
         for i in range(0, 5):
             form = Honorari()
             forms.append(form)
-        return render_template('honorari.html', forms=forms, workdays=workdays, number_of_workdays=number_of_workdays)
+        return render_template('honorarium.html', forms=forms, workdays=workdays, number_of_workdays=number_of_workdays)
 
 
-@app.route('/postavke', methods=['GET', 'POST'])
+@app.route('/settings', methods=['GET', 'POST'])
 @login_required
-def postavke():
+def settings():
     form = Postavke()
     if request.method == 'POST':
         name = request.form.get('name')
@@ -256,24 +256,24 @@ def postavke():
         if transportation_fee != "":
             current_user.transportation_fee = transportation_fee
             db.session.commit()
-        return redirect(url_for('pregled_usluga'))
-    return render_template('postavke.html', form=form)
+        return redirect(url_for('view_services'))
+    return render_template('settings.html', form=form)
 
 
-@app.route('/usluge', methods=['GET'])
+@app.route('/services', methods=['GET'])
 @login_required
-def pregled_usluga():
-    return render_template('usluge.html')
+def view_services():
+    return render_template('services.html')
 
 
-@app.route('/dodaj_inventar', methods=["GET", "POST"])
+@app.route('/add_inventory', methods=["GET", "POST"])
 @login_required
-def dodaj_inventar():
+def add_inventory():
     form = InventoryForm()
     if request.method == 'POST':
         if Inventory.query.filter_by(inventory_number=request.form.get('inventory_number')).first():
             flash('Inventarni broj već postoji!')
-            return redirect(url_for('dodaj_inventar'))
+            return redirect(url_for('add_inventory'))
         else:
             new_inventory = Inventory(
                 inventory_number=request.form.get('inventory_number'),
@@ -287,13 +287,13 @@ def dodaj_inventar():
             db.session.add(new_inventory)
             db.session.commit()
             flash('Inventar je uspješno ažuriran!')
-        return redirect(url_for('dodaj_inventar', status="success"))
-    return render_template('inventar.html', form=form)
+        return redirect(url_for('add_inventory', status="success"))
+    return render_template('inventory.html', form=form)
 
 
-@app.route("/pregled_inventara")
+@app.route("/view_inventory")
 @login_required
-def pregled_inventara():
+def view_inventory():
     form = InventoryCheckForm()
     if InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first():
         status = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first().inventory_check
@@ -312,7 +312,7 @@ def pregled_inventara():
             for i in Inventory.query.filter_by(organisation=current_user.organisation, location=item.location).all():
                 inventory_list.append(i)
             inventory_by_location.append(inventory_list)
-    return render_template('pregledInventara.html', organisation=current_user.organisation, locations=locations,
+    return render_template('viewInventory.html', organisation=current_user.organisation, locations=locations,
                            data=inventory_by_location, status=status, form=form)
 
 
@@ -359,7 +359,7 @@ def inventory_check_status():
         for item in items:
             item.item_status = False
             db.session.commit()
-    return redirect('pregled_inventara')
+    return redirect('view_inventory')
 
 
 @app.route('/generate_qr_codes')
@@ -378,7 +378,7 @@ def generate_qr_codes():
         response = send_file(qrcodes_buffer, mimetype='application/pdf')
         return response
     else:
-        return redirect('pregled_inventara')
+        return redirect('view_inventory')
 
 
 @app.route('/print_inventory')

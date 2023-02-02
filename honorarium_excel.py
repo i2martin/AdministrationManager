@@ -33,7 +33,6 @@ def select_worksheet(workbook):
 
 def honorarium(data, workdays, user):
     month_of_report = datetime.utcnow().strftime("%m/%Y")
-    print(data)
     if isfile(filename):
         # TODO: find a better way to link to a file
         request = get('http://127.0.0.1:5000/static/files/tablica-honorari.xlsx')
@@ -76,7 +75,7 @@ def honorarium(data, workdays, user):
         else:
             worksheet["A3"] = "Vaša organizacija/škola"
         if user.name is not None and user.surname is not None:
-            worksheet["F7"] = user.name + " " + user.surname
+            worksheet["F7"] = user.surname + " " + user.rname
         if user.work_address is not None:
             worksheet["A4"] = user.work_address
         else:

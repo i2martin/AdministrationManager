@@ -4,7 +4,7 @@
 {% include 'header.html' %}
 <div class="settings">
     <h1 class="text-center text-light" style="padding-bottom: 5%;"> Vaše postavke</h1>
-    <form onsubmit="return isNumber()" action="{{url_for('postavke')}}" method="POST" class="add-shadow" style="border-radius:10px;">
+    <form action="{{url_for('settings')}}" method="POST" class="add-shadow" style="border-radius:10px;">
         <ul class="list-group list-group-flush" style="border-radius: 10px;">
             <li class="list-group-item">
                 <span class="left">Ime</span> <span

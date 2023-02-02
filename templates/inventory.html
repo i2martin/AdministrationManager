@@ -4,11 +4,11 @@
 {% block content %}
 <div class="settings">
     <h1 class="text-center text-light" style="padding-bottom: 5%;"> Dodavanje inventara</h1>
-    <div class="col-lg-12 col-xl-11">
+    <div class="col-lg-12 col-xl-12">
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     {% for message in messages %}
-                        {% if success %}
+                        {% if status == success %}
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 {{ message }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -23,7 +23,7 @@
                 {% endif %}
             {% endwith %}
         </div>
-    <form  onsubmit="return isNumber()" id="inventory" action="{{url_for('dodaj_inventar')}}" method="POST" class="add-shadow" style="border-radius:10px;">
+    <form id="inventory" action="{{url_for('add_inventory')}}" method="POST" class="add-shadow" style="border-radius:10px;">
         <ul class="list-group list-group-flush" style="border-radius: 10px;">
             <li class="list-group-item">
                 <span class="left">Inventarni broj</span> <span class="right">{{form.inventory_number(class="custom_string_field text-center", pattern='.{1,10}', placeholder="108",title='Inventarni broj mora sadržavati između 1 i 10 znakova.', required="True")}}</span>

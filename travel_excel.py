@@ -59,6 +59,7 @@ def travel(data, workdays, user):
         del data["vehicle"]
         del data["submit"]
         if len(data) > 0:
+            print(data)
             data_keys = list(data.keys())  # convert dictionairy to list
             for i in range(0, len(data_keys)):
                 worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]

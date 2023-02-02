@@ -3,23 +3,23 @@
 {% block content %}
 {% include 'header.html' %}
 <div class="d-flex justify-content-center container-fluid">
-    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('putni_troskovi')}}" role="button"
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('travel_expense')}}" role="button"
        style="min-width: 300px; margin-top: 4%; margin-bottom: 2%;">Prijevoz</a>
 </div>
 <div class="d-flex justify-content-center container-fluid">
-    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('honorari')}}" role="button"
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('honorarium')}}" role="button"
        style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Honorari</a>
 </div>
 <div class="d-flex justify-content-center container-fluid">
-    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('pregled_inventara')}}" role="button"
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('view_inventory')}}" role="button"
        style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Pregled inventara</a>
 </div>
 <div class="d-flex justify-content-center container-fluid">
-    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('dodaj_inventar')}}" role="button"
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('add_inventory')}}" role="button"
        style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Dodaj inventar</a>
 </div>
 <div class="d-flex justify-content-center container-fluid">
-    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('postavke')}}" role="button"
+    <a class="btn btn-lg btn-primary btn-block" href="{{url_for('settings')}}" role="button"
        style="min-width: 300px; margin-top: 2%; margin-bottom: 2%;">Postavke</a>
 </div>
 {% endblock %}
