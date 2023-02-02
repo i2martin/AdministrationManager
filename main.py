@@ -1,5 +1,7 @@
 import time
 from datetime import datetime
+from io import BytesIO
+
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -365,13 +367,14 @@ def generate_qr_codes():
     data = Inventory.query.filter_by(organisation=current_user.organisation).all()
     qrcodes = []
     for i in range(0, len(data)):
-        img = qrcode.make("127.0.0.1:5000/inventory/" + data[i].inventory_number)
+        img = qrcode.make("http://127.0.0.1:5000/inventory/" + data[i].inventory_number)
         img = img.resize(size=(60, 60))  # TODO: this might cause a problem with size
         qrcodes.append(img)
-    file = 'static/files/qrcodes.pdf'
     if len(qrcodes) > 0:
-        qrcodes[0].save(file, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[0:])
-        response = send_file(file, mimetype='application/pdf')
+        qrcodes_buffer = BytesIO()
+        qrcodes[0].save(qrcodes_buffer, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[0:])
+        qrcodes_buffer.seek(0)
+        response = send_file(qrcodes_buffer, mimetype='application/pdf')
         return response
     else:
         return redirect('pregled_inventara')
