@@ -1,6 +1,8 @@
+from io import BytesIO
+from os.path import isfile
 import openpyxl
-import shutil
 from datetime import datetime
+from requests import get
 
 months_croatia = ["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan",
                   "Listopad", "Studeni", "Prosinac"]
@@ -26,15 +28,12 @@ filename = 'static/files/tablica-prijevoz.xlsx'
 original = r'static/files/tablica-prijevoz.xlsx'
 target = r'static/files/temp_files/tablica-prijevoz.xlsx'
 month_year_cell = "A10"
-shutil.copyfile(original, target)
 
 
-# TODO: Check if the file actually exists so it doesn't crash
-def open_workbook(filename):
-    return openpyxl.load_workbook(filename=filename)
+def open_workbook(f_name):
+    return openpyxl.load_workbook(filename=f_name)
 
 
-# TODO: Check if the sheet actually exists so it doesn't crash
 def select_worksheet(workbook):
     return workbook['Obrazac']
 
@@ -46,42 +45,46 @@ def travel(data, workdays, user):
     current_year = datetime.now().year
     total_arrival = 0
     total_return = 0
-    shutil.copyfile(original, target)  # create a duplicate of .xls and open it
-    workbook = open_workbook(target)
-    worksheet = select_worksheet(workbook)
-    km_arrival = data["km_arrival"]
-    del data["km_arrival"]
-    km_return = data["km_return"]
-    del data["km_return"]
-    vehicle = data["vehicle"]
-    del data["vehicle"]
-    del data["submit"]
-    if len(data) > 0:
-        data_keys = list(data.keys())  # convert dictionairy to list
-        for i in range(0, len(data_keys)):
-            worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]
-            worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
-            total_arrival = total_arrival + float(km_arrival[int(data_keys[i])])
-            worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
-            total_return = total_return + float(km_return[int(data_keys[i])])
-            worksheet[vehicle_cells[i]] = vehicle[int(data_keys[i])]
+    if isfile(filename):
+        # TODO: find a better way to link to a file
+        request = get('http://127.0.0.1:5000/static/files/tablica-prijevoz.xlsx')
+        buffer = BytesIO(request.content)
+        workbook = open_workbook(buffer)
+        worksheet = select_worksheet(workbook)
+        km_arrival = data["km_arrival"]
+        del data["km_arrival"]
+        km_return = data["km_return"]
+        del data["km_return"]
+        vehicle = data["vehicle"]
+        del data["vehicle"]
+        del data["submit"]
+        if len(data) > 0:
+            data_keys = list(data.keys())  # convert dictionairy to list
+            for i in range(0, len(data_keys)):
+                worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]
+                worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
+                total_arrival = total_arrival + float(km_arrival[int(data_keys[i])])
+                worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
+                total_return = total_return + float(km_return[int(data_keys[i])])
+                worksheet[vehicle_cells[i]] = vehicle[int(data_keys[i])]
 
-    # add user specific fields to excel table (if they are set)
-    if user.work_address is not None:
-        worksheet["B6"] = user.work_address
-    if user.home_address is not None:
-        worksheet["B7"] = user.home_address
-    if user.name is not None and user.surname is not None:
-        worksheet["C5"] = user.name + " " + user.surname
+        # add user specific fields to excel table (if they are set)
+        if user.work_address is not None:
+            worksheet["B6"] = user.work_address
+        if user.home_address is not None:
+            worksheet["B7"] = user.home_address
+        if user.name is not None and user.surname is not None:
+            worksheet["C5"] = user.name + " " + user.surname
 
-    worksheet["B35"] = total_arrival
-    worksheet["C35"] = total_return
-    worksheet["D35"] = total_arrival + total_return
-    worksheet["C38"] = day_of_report
-    worksheet["A10"] = current_month + "/" + str(current_year)
+        worksheet["B35"] = total_arrival
+        worksheet["C35"] = total_return
+        worksheet["D35"] = total_arrival + total_return
+        worksheet["C38"] = day_of_report
+        worksheet["A10"] = current_month + "/" + str(current_year)
 
-    if user.transportation_fee is not None:
-        worksheet["C39"] = user.transportation_fee
-        worksheet["D40"] = user.transportation_fee * (total_arrival + total_return)
+        if user.transportation_fee is not None:
+            worksheet["C39"] = user.transportation_fee
+            worksheet["D40"] = user.transportation_fee * (total_arrival + total_return)
 
-    workbook.save(target)
+        workbook.save(target)
+        buffer.close()

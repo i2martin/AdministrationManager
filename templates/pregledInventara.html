@@ -11,7 +11,7 @@
     <form style="display: inline;" action="{{url_for('generate_qr_codes')}}">
 {{form.generate_qrs(class='btn btn-lg btn-primary')}}
         </form>
-    <form style="display: inline;" action="{{url_for('inventory_check_status')}}">
+    <form onsubmit="return confirm('Jeste li sigurni da želite nastaviti?')" style="display: inline;" action="{{url_for('inventory_check_status')}}">
 {% if status == False %}
     {{form.start_check(class='btn btn-lg btn-primary')}}
 {% else %}
