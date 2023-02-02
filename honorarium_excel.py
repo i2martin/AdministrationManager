@@ -37,7 +37,6 @@ def honorarium(data, workdays, user):
     if isfile(filename):
         # TODO: find a better way to link to a file
         request = get('http://127.0.0.1:5000/static/files/tablica-honorari.xlsx')
-        print(request)
         buffer = BytesIO(request.content)
         workbook = open_workbook(buffer)
         worksheet = select_worksheet(workbook)

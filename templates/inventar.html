@@ -30,7 +30,7 @@
 
             </li>
             <li class="list-group-item">
-                <span class="left">Naziv</span> <span class="right">{{form.name(size = 35, pattern="[^(0-9)]{3,50}", title="Naziv mora biti između 3 i 50 znakova, bez brojeva.", class="custom_string_field text-center", placeholder="Kutija šibica", required="True")}}</span>
+                <span class="left">Naziv</span> <span class="right">{{form.name(size = 35, pattern=".{3,50}", title="Naziv mora biti između 3 i 50 znakova.", class="custom_string_field text-center", placeholder="Kutija šibica", required="True")}}</span>
             </li>
             <li class="list-group-item">
                 <span class="left">Lokacija</span> <span class="right">{{form.location(size = 35, class="custom_string_field text-center", placeholder="Tajništvo", required="True", pattern='.{3,50}', title='Lokacija mora sadržavati između 3 i 50 znakova.')}}</span>

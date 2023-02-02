@@ -165,3 +165,15 @@ ul
     padding-bottom: 8px;
     padding-left: 17px;
 }
+
+.div-forms
+{
+    margin-bottom: 2%;
+    display: flex;
+    justify-content: space-around;
+}
+.custom-forms
+{
+    width: 100%;
+    margin; 5px;
+}

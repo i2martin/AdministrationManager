@@ -1,11 +1,12 @@
 import time
 from datetime import datetime
 from io import BytesIO
-
+from openpyxl import load_workbook
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask import flash
+from requests import get
 from wtforms import StringField, SubmitField, SelectField, widgets, SelectMultipleField, PasswordField
 import workdays as wd
 import honorarium_excel as he
@@ -78,6 +79,7 @@ class InventoryCheckForm(FlaskForm):
     start_check = SubmitField(label='Započni provjeru', id='start_check')
     end_check = SubmitField(label='Završi provjeru', id='finish_check')
     generate_qrs = SubmitField(label='Dohvati QR kodove', id='generate_qrs')
+    print_inventory = SubmitField(label='Ispiši inventar', id='print_inventory')
 
 
 with app.app_context():
@@ -154,8 +156,7 @@ def register():
         else:
             db.session.add(new_user)
             db.session.commit()
-            login_user(user)
-            return redirect(url_for('pregled_usluga'))
+            return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
 
@@ -378,6 +379,30 @@ def generate_qr_codes():
         return response
     else:
         return redirect('pregled_inventara')
+
+
+@app.route('/print_inventory')
+@login_required
+def print_inventory():
+    data = Inventory.query.filter_by(organisation=current_user.organisation).order_by(Inventory.location.asc()).all()
+    # TODO: find a better way to link to a file
+    request = get('http://127.0.0.1:5000/static/files/inventar.xlsx')
+    buffer = BytesIO(request.content)
+    workbook = load_workbook(buffer)
+    worksheet = workbook['Inventar']
+    i = 1
+    for item in data:
+        i = i + 1
+        worksheet["A" + str(i)] = item.inventory_number
+        worksheet["B" + str(i)] = item.location
+        worksheet["C" + str(i)] = item.name
+        worksheet["D" + str(i)] = item.unit
+        worksheet["E" + str(i)] = item.amount
+        worksheet["F" + str(i)] = item.value
+    buffer2 = BytesIO()
+    workbook.save(buffer2)
+    buffer2.seek(0)
+    return send_file(BytesIO(buffer2.read()), mimetype="application/vnd.ms-excel", download_name="inventar.xlsx", as_attachment=True)
 
 
 if __name__ == '__main__':
