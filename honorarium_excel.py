@@ -75,7 +75,7 @@ def honorarium(data, workdays, user):
         else:
             worksheet["A3"] = "Vaša organizacija/škola"
         if user.name is not None and user.surname is not None:
-            worksheet["F7"] = user.surname + " " + user.rname
+            worksheet["F7"] = user.surname + " " + user.name
         if user.work_address is not None:
             worksheet["A4"] = user.work_address
         else:

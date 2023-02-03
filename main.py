@@ -353,12 +353,33 @@ def inventory_check_status():
         db.session.commit()
         # TODO: print inventory check report --> missing/unchecked items (maybe ask to finish it with missing items
         #  or not?)
-
-        # loop through all the inventory items and change their status to unchecked --> False
+        # TODO: find a better way to link to a file
+        request = get('http://127.0.0.1:5000/static/files/inventar.xlsx')
+        buffer = BytesIO(request.content)
+        workbook = load_workbook(buffer)
+        worksheet = workbook['Inventar']
         items = Inventory.query.filter_by(organisation=current_user.organisation).all()
+        i = 1
+        for item in items:
+            i = i + 1
+            worksheet["A" + str(i)] = item.inventory_number
+            worksheet["B" + str(i)] = item.location
+            worksheet["C" + str(i)] = item.name
+            worksheet["D" + str(i)] = item.unit
+            worksheet["E" + str(i)] = item.amount
+            worksheet["F" + str(i)] = item.value
+            if item.item_status == True:
+                worksheet["G" + str(i)] = "✔"
+            else:
+                worksheet["G" + str(i)] = "❌"
+        buffer2 = BytesIO()
+        workbook.save(buffer2)
+        buffer2.seek(0)
+        # loop through all the inventory items and change their status to unchecked --> False
         for item in items:
             item.item_status = False
             db.session.commit()
+        return send_file(BytesIO(buffer2.read()), mimetype="application/vnd.ms-excel", download_name="inventar.xlsx", as_attachment=False)
     return redirect('view_inventory')
 
 
