@@ -1,6 +1,9 @@
 import time
 from datetime import datetime
 from io import BytesIO
+
+import PIL
+from PIL.Image import Image
 from openpyxl import load_workbook
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file
 from flask_bootstrap import Bootstrap
@@ -383,6 +386,64 @@ def inventory_check_status():
     return redirect('view_inventory')
 
 
+def concat_images_horizontally(images):
+    """
+    Function that accepts a list of PIL.Image objects and stacks them up horizontally in rows of 2 images.
+    :param images: list of PIL.Image objects
+    :return: list of stacked up PIL.Image objects
+    """
+    new_images = []
+    if len(images) >= 2:
+        for i in range(0, len(images)):
+            global dst
+            if i % 2 == 0 or i == len(images) - 1:
+                if i != len(images) - 1:
+                    dst = PIL.Image.new('RGB', (120, 60))
+                    dst.paste(images[i], (0, 0))
+                else:
+                    dst = PIL.Image.new('RGB', (60, 60))
+                    dst.paste(images[i], (0, 0))
+                    new_images.append(dst)
+            else:
+                dst.paste(images[i], (60,0))
+                new_images.append(dst)
+        return new_images
+    else:
+        return images
+
+
+def concat_images_vertically(images):
+    """
+    Function that accepts a list of PIL.Image objects and stacks them up vertically in columns of 2 images.
+    :param images: list of PIL.Image objects
+    :return: list of vertically stacked PIL.Image objects
+    """
+    global dst
+    image_count = 0
+    new_images = []
+    if len(images) >= 2:
+        print(len(images))
+        for i in range(0, len(images)):
+            if i % 2 == 0 or i == len(images) - 1:
+                if i != len(images) - 1:
+                    dst = PIL.Image.new('RGB', (120, 120))
+                    dst.paste(images[i], (0, 0))
+                elif len(images) - 1 == 1:
+                    dst.paste(images[i], (0, 60))
+                    dst.paste(PIL.Image.new("RGB", (60, 60), (255, 255, 255)), (60, 60))
+                    new_images.append(dst)
+                else:
+                    dst = PIL.Image.new('RGB', (120, 120))
+                    dst.paste(images[i], (0, 0))
+                    new_images.append(dst)
+            else:
+                dst.paste(images[i], (0, 60))
+                new_images.append(dst)
+        return new_images
+    else:
+        return images
+
+
 @app.route('/generate_qr_codes')
 @login_required
 def generate_qr_codes():
@@ -393,7 +454,14 @@ def generate_qr_codes():
         img = img.resize(size=(60, 60))  # TODO: this might cause a problem with size
         qrcodes.append(img)
     if len(qrcodes) > 0:
+        if len(qrcodes) > 2:
+            qrcodes = concat_images_horizontally(qrcodes)
+            print(qrcodes)
+            if len(qrcodes) >= 2:
+                qrcodes = concat_images_vertically(qrcodes)
+                print(qrcodes)
         qrcodes_buffer = BytesIO()
+        qrcodes = qrcodes * 10
         qrcodes[0].save(qrcodes_buffer, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[0:])
         qrcodes_buffer.seek(0)
         response = send_file(qrcodes_buffer, mimetype='application/pdf')
