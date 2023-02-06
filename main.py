@@ -461,7 +461,7 @@ def generate_qr_codes():
                 qrcodes = concat_images_vertically(qrcodes)
                 print(qrcodes)
         qrcodes_buffer = BytesIO()
-        qrcodes = qrcodes * 10
+        qrcodes = qrcodes
         qrcodes[0].save(qrcodes_buffer, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[0:])
         qrcodes_buffer.seek(0)
         response = send_file(qrcodes_buffer, mimetype='application/pdf')
@@ -493,6 +493,14 @@ def print_inventory():
     buffer2.seek(0)
     return send_file(BytesIO(buffer2.read()), mimetype="application/vnd.ms-excel", download_name="inventar.xlsx", as_attachment=True)
 
+
+@app.route('/remove_inventory/int:<id>')
+@login_required
+def remove_inventory(id):
+    item = Inventory.query.filter_by(inventory_number = id).first()
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for('view_inventory'))
 
 if __name__ == '__main__':
     app.run(debug=True)

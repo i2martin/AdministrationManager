@@ -19,8 +19,9 @@
             {{form.start_check(class='btn btn-lg btn-primary')}}
         {% else %}
             {{form.end_check(class='btn btn-lg btn-primary')}}
-    </form>
         {% endif %}
+    </form>
+
 </div>
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     {% for i in range (0, locations|length) %}
@@ -59,6 +60,7 @@
             {% if status == True %}
             <th scope="col"> Status</th>
             {% endif %}
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -79,6 +81,10 @@
                         <img class="image-status" src="{{url_for('static',filename='images/missing.PNG')}}" alt="">
                     </td>
                 {% endif %}
+            {% else %}
+                <td>
+                    <button type="submit" onclick="window.location.href='{{url_for('remove_inventory', id=item.inventory_number)}}'">Ukloni</button>
+                </td>
             {% endif %}
         </tr>
         {% endfor %}
