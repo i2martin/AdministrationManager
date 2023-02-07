@@ -57,10 +57,11 @@
             <th scope="col">Jedinica mjere</th>
             <th scope="col">Količina</th>
             <th scope="col">Vrijednost [EUR]</th>
-            {% if status == True %}
+                {% if status == True %}
             <th scope="col"> Status</th>
+            {% else %}
+                <th scope="col"></th>
             {% endif %}
-            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
@@ -83,7 +84,9 @@
                 {% endif %}
             {% else %}
                 <td>
-                    <button type="submit" onclick="window.location.href='{{url_for('remove_inventory', id=item.inventory_number)}}'">Ukloni</button>
+                    <button type="submit" class="btn btn-primary" onclick="window.location.href='{{url_for('remove_inventory', id=item.inventory_number)}}'">Ukloni</button>
+                    <button type="submit" class="btn btn-primary" onclick="window.location.href='{{url_for('update_inventory', id=item.inventory_number)}}'">Izmijeni</button>
+
                 </td>
             {% endif %}
         </tr>

@@ -502,5 +502,16 @@ def remove_inventory(id):
     db.session.commit()
     return redirect(url_for('view_inventory'))
 
+@app.route('/update_inventory/int:<id>')
+@login_required
+# TODO: Finish this to redirect to a form that will update existing item with set changes
+def update_inventory(id):
+    item = Inventory.query.filter_by(inventory_number = id).first()
+    print(item.inventory_number)
+    print(item.name)
+    print(item.location)
+    print(item.amount)
+    print(item.value)
+    return redirect(url_for('view_inventory'))
 if __name__ == '__main__':
     app.run(debug=True)
