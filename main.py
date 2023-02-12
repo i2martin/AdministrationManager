@@ -336,7 +336,7 @@ def inventory_check(inventory_id):
 @login_required
 def inventory_check_status():
     record = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first()
-    if record is None or record is 'None' or record is 'NoneType':
+    if record is None or record == 'None' or record == 'NoneType':
         new_check = InventoryCheckHistory(
             organisation=current_user.organisation,
             inventory_check=True,

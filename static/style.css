@@ -177,3 +177,18 @@ ul
     width: 100%;
     margin; 5px;
 }
+.button-link
+{
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: #0D6DFB;
+    text-decoration: underline;
+    cursor: pointer;
+    padding-bottom: 5px;
+
+}
+.align-table
+{
+    vertical-align: middle;
+}
