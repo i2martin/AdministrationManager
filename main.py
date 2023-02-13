@@ -49,7 +49,7 @@ class User(UserMixin, db.Model):
 
 class Inventory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    inventory_number = db.Column(db.String(100), unique=True)
+    inventory_number = db.Column(db.String(100))
     name = db.Column(db.String(100))
     unit = db.Column(db.String(100))
     amount = db.Column(db.String(100))
@@ -274,7 +274,7 @@ def view_services():
 def add_inventory():
     form = InventoryForm()
     if request.method == 'POST':
-        if Inventory.query.filter_by(inventory_number=request.form.get('inventory_number')).first():
+        if Inventory.query.filter_by(inventory_number=request.form.get('inventory_number'), organisation=current_user.organisation).first():
             flash('Inventarni broj već postoji!')
             return redirect(url_for('add_inventory'))
         else:
@@ -298,6 +298,7 @@ def add_inventory():
 @login_required
 def view_inventory():
     form = InventoryCheckForm()
+    form_popup = InventoryForm()
     if InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first():
         status = InventoryCheckHistory.query.filter_by(organisation=current_user.organisation).first().inventory_check
     else:
@@ -316,7 +317,7 @@ def view_inventory():
                 inventory_list.append(i)
             inventory_by_location.append(inventory_list)
     return render_template('viewInventory.html', organisation=current_user.organisation, locations=locations,
-                           data=inventory_by_location, status=status, form=form)
+                           data=inventory_by_location, status=status, form=form, form_popup=form_popup)
 
 
 @app.route('/inventory/<inventory_id>')
@@ -502,16 +503,22 @@ def remove_inventory(id):
     db.session.commit()
     return redirect(url_for('view_inventory'))
 
-@app.route('/update_inventory/int:<id>')
+@app.route('/update_inventory/<id>', methods=["POST"])
 @login_required
 # TODO: Finish this to redirect to a form that will update existing item with set changes
 def update_inventory(id):
-    item = Inventory.query.filter_by(inventory_number = id).first()
-    print(item.inventory_number)
-    print(item.name)
-    print(item.location)
-    print(item.amount)
-    print(item.value)
-    return redirect(url_for('view_inventory'))
+    if request.method == "POST":
+        item = Inventory.query.filter_by(inventory_number = id, organisation=current_user.organisation).first()
+        #TODO: Check if the new inventory number already exists
+        item.inventory_number = request.form.get('inventory_number')
+        item.name = request.form.get('name')
+        item.location = request.form.get('location')
+        item.amount = request.form.get('amount')
+        item.unit = request.form.get('unit')
+        item.value = request.form.get('value')
+        db.session.commit()
+        return redirect(url_for('view_inventory'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)

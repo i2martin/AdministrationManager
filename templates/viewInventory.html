@@ -85,8 +85,8 @@
             {% else %}
                 <td>
                     <button type="submit" class="button-link" onclick="window.location.href='{{url_for('remove_inventory', id=item.inventory_number)}}'">Ukloni</button>
-                    <button type="submit" class="button-link" onclick="window.location.href='{{url_for('update_inventory', id=item.inventory_number)}}'">Izmijeni</button>
-
+                    <button type="submit" class="button-link btn-form-popup">Izmijeni</button>
+                    <!-- onclick="window.location.href='{{url_for('update_inventory', id=item.inventory_number)}}'" -->
                 </td>
             {% endif %}
         </tr>
@@ -95,4 +95,68 @@
     </table>
 </div>
 {% endfor %}
+<div class="form-popup" id="myForm">
+    <form id="inventory" method="POST" class="add-shadow" style="border-radius:10px;">
+            <ul class="list-group list-group-flush" style="border-radius: 10px;">
+                <li class="list-group-item">
+                    <span class="left">Inventarni broj</span> <span class="right">{{form_popup.inventory_number(class="custom_string_field text-center", pattern='.{1,10}', placeholder="108",title='Inventarni broj mora sadržavati između 1 i 10 znakova.', required="True")}}</span>
+
+                </li>
+                <li class="list-group-item">
+                    <span class="left">Naziv</span> <span class="right">{{form_popup.name(size = 35, pattern=".{3,50}", title="Naziv mora biti između 3 i 50 znakova.", class="custom_string_field text-center", placeholder="Kutija šibica", required="True")}}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="left">Lokacija</span> <span class="right">{{form_popup.location(size = 35, class="custom_string_field text-center", placeholder="Tajništvo", required="True", pattern='.{3,50}', title='Lokacija mora sadržavati između 3 i 50 znakova.')}}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="left">Jedinica mjere</span> <span class="right">{{form_popup.unit(size=20, class="custom_string_field text-center", placeholder="komad", required="True")}}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="left">Količina</span> <span class="right">{{form_popup.amount(size=20, class="custom_string_field text-center", pattern="[0-9]{1,10})?" ,step="0.01", title="Unesite cijeli broj", placeholder="5", required="True")}}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="left">Procijenjena vrijednost</span> <span class="right">{{form_popup.value(class="custom_string_field text-center", pattern="[0-9]+([\.,][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.', placeholder="100EUR", required="True")}}</span>
+                </li>
+
+                <div class="btn-custom justify-content-center align-content-center text-center" style="margin-top: 5%;">
+                    <button type="button" class="btn btn-danger btn-large col-3 text-light" onclick="closeForm()">Zatvori</button>
+                    {{form_popup.submit(class='btn btn-primary btn-large col-3 text-light', value='Ažuriraj')}}
+
+                </div>
+            </ul>
+        </form>
+</div>
+<script>
+    function findTdValues() {
+      let tdValues = [];
+      let button = this;
+      let tr = button.parentNode.parentNode;
+      let tdElements = tr.getElementsByTagName('td');
+
+      for (let i = 0; i < tdElements.length - 1; i++) {
+        tdValues.push(tdElements[i].innerHTML);
+      }
+
+      console.log(tdValues);
+      document.getElementById("inventory_number").value = tdValues[0].trim();
+      document.getElementById("name").value = tdValues[1].trim();
+      document.getElementById("unit").value = tdValues[2].trim();
+      document.getElementById("location").value = document.getElementsByClassName('nav-link active')[1].innerHTML.trim();
+      document.getElementById("amount").value = tdValues[3].trim();
+      document.getElementById("value").value = Number(tdValues[4].trim());
+      document.getElementById("myForm").style.display = "block";
+      document.getElementById("inventory").action = "/update_inventory/"+tdValues[0].trim();
+      }
+
+      let buttons = document.getElementsByClassName('button-link btn-form-popup');
+      console.log(buttons);
+      for (let i = 0; i < buttons.length; i++) {
+      buttons[i].addEventListener('click', findTdValues);
+      }
+      function closeForm()
+      {
+        document.getElementById("myForm").style.display = "none";
+      }
+
+</script>
 {% endblock %}
