@@ -18,6 +18,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 import qrcode
+import validators as validate
 
 login_manager = LoginManager()
 app = Flask(__name__)
@@ -143,7 +144,8 @@ def home():
 def register():
     form = RegisterForm()
     # TODO: Add checks (i.e. existing username) so that it doesn't crash
-    if request.method == "POST":
+    if request.method == "POST" and form.validate() and validate.check_username(request.form.get('username'))\
+            and validate.check_password(request.form.get('password')):
         new_user = User(
             username=request.form.get('username'),
             password=generate_password_hash(password=request.form.get('password'), method='pbkdf2:sha256',
@@ -160,13 +162,18 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for('login'))
-    return render_template('register.html', form=form)
+    else:
+        # this means either it was GET request or checks failed
+        if request.method == "GET":
+            return render_template('register.html', form=form)
+        else:
+            flash('Dogodila se greška prilikom registracije.')
+            return redirect(url_for('register'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # TODO: Add checks (i.e. existing username) so that it doesn't crash
-    if request.method == 'POST':
+    if request.method == 'POST' and validate.check_password(request.form.get('password')) and validate.check_username(request.form.get('username')):
         username = request.form.get('username')
         password = request.form.get('password')
         # Find user by username entered.
@@ -320,11 +327,13 @@ def view_inventory():
                            data=inventory_by_location, status=status, form=form, form_popup=form_popup)
 
 
-@app.route('/inventory/<inventory_id>')
-def inventory_check(inventory_id):
-    item = Inventory.query.filter_by(inventory_number=inventory_id).first()
+@app.route('/inventory/<organisation>/<inventory_id>')
+def inventory_check(organisation, inventory_id):
+    print(organisation)
+    item = Inventory.query.filter_by(inventory_number=inventory_id, organisation=organisation).first()
+    print(item)
     if item and InventoryCheckHistory.query.filter_by(
-            organisation=current_user.organisation).first().inventory_check is True:
+            organisation=organisation).first().inventory_check is True:
         # update item status to checked (True)
         item.item_status = True
         db.session.commit()
@@ -451,7 +460,7 @@ def generate_qr_codes():
     data = Inventory.query.filter_by(organisation=current_user.organisation).all()
     qrcodes = []
     for i in range(0, len(data)):
-        img = qrcode.make("http://127.0.0.1:5000/inventory/" + data[i].inventory_number)
+        img = qrcode.make("http://127.0.0.1:5000/inventory/" + current_user.organisation + "/" + data[i].inventory_number)
         img = img.resize(size=(60, 60))  # TODO: this might cause a problem with size
         qrcodes.append(img)
     if len(qrcodes) > 0:
@@ -498,7 +507,7 @@ def print_inventory():
 @app.route('/remove_inventory/int:<id>')
 @login_required
 def remove_inventory(id):
-    item = Inventory.query.filter_by(inventory_number = id).first()
+    item = Inventory.query.filter_by(inventory_number = id, organisation = current_user.organisation).first()
     db.session.delete(item)
     db.session.commit()
     return redirect(url_for('view_inventory'))
