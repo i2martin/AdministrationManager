@@ -6,7 +6,6 @@ import PIL
 from PIL.Image import Image
 from openpyxl import load_workbook
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file
-from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask import flash
 from requests import get
@@ -87,7 +86,6 @@ class InventoryCheckForm(FlaskForm):
 
 
 with app.app_context():
-    Bootstrap(app)
     db.create_all()
     login_manager.init_app(app)
 
