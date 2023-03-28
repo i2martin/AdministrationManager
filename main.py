@@ -206,8 +206,7 @@ def travel_expense():
     workdays = wd.order_days(workdays)
     number_of_workdays = len(workdays)
     if request.method == 'POST':
-        te.travel(data=request.form.to_dict(flat=False), workdays=workdays, user=current_user)
-        return send_from_directory(directory='static', path='files/temp_files/tablica-prijevoz.xlsx')
+        return te.travel(data=request.form.to_dict(flat=False), workdays=workdays, user=current_user)
     else:
         form = PutniTroskovi()
         return render_template('travel.html', form=form, workdays=workdays, number_of_workdays=number_of_workdays,

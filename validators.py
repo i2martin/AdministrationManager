@@ -7,7 +7,7 @@ def check_password(password):
         return False
 
     # Check if password contains at least one uppercase letter, one lowercase letter, and one number
-    if not re.search(r'[A-Z]', password) or not re.search(r'[a-z]', password) or not re.search(r'\d', password):
+    if not re.search(r'[A-Z,Č,Š,Ć,Đ,Ž]', password) or not re.search(r'[a-z,č,š,ć,đ,ž]', password) or not re.search(r'\d', password):
         return False
 
     # Check if password contains at least one special character

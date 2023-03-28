@@ -63,7 +63,7 @@ function validate()
                                         <i class="login-icons fas fa-lock fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <span id="password-error"></span>
-                                            {{form.password(class="form-control", pattern="(?=.*\d)(?=.*[a-z,č,š,ć,đ,ž])(?=.*[A-Z,Č,Ć,Š,Đ,Ž])(?=.*[!@#$%^&*()_+{}|:]).{8,30}", title="8-30 znakova s malim i velikim slovima,brojevima i znakovima !@#$%^&*()_+{}|:", required="True")}}
+                                            {{form.password(class="form-control", pattern="(?=.*\d)(?=.*[a-z,č,š,ć,đ,ž])(?=.*[A-Z,Č,Ć,Š,Đ,Ž])(?=.*[!@#$%^&*()_+{}|:+]).{8,30}", title="8-30 znakova s malim i velikim slovima,brojevima i znakovima !@#$%^&*()_+{}|:", required="True")}}
                                             <label class="form-label">Lozinka</label>
                                         </div>
                                     </div>

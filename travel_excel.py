@@ -2,6 +2,8 @@ from io import BytesIO
 from os.path import isfile
 import openpyxl
 from datetime import datetime
+
+from flask import send_file
 from requests import get
 
 months_croatia = ["Siječanj", "Veljača", "Ožujak", "Travanj", "Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan",
@@ -87,5 +89,7 @@ def travel(data, workdays, user):
             worksheet["C39"] = user.transportation_fee
             worksheet["D40"] = user.transportation_fee * (total_arrival + total_return)
 
-        workbook.save(target)
-        buffer.close()
+        workbook.save(buffer)
+        buffer.seek(0)
+        return send_file(BytesIO(buffer.read()), mimetype="application/vnd.ms-excel", download_name="prijevoz.xlsx", as_attachment=True)
+
