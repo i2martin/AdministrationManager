@@ -1,7 +1,6 @@
-import time
 from datetime import datetime
 from io import BytesIO
-
+import os
 import PIL
 from PIL.Image import Image
 from openpyxl import load_workbook
@@ -18,13 +17,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 import qrcode
 import validators as validate
-
 login_manager = LoginManager()
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", 'sqlite:///users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
