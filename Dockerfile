@@ -11,4 +11,4 @@ COPY . /app
 RUN pip install -r requirements.txt
 
 # Define the entry point for the container
-CMD ["gunicorn"  , "--bind", "0.0.0.0:8000", "main:app"]
+CMD ["gunicorn"  , "--bind", "0.0.0.0:3000", "main:app"]
