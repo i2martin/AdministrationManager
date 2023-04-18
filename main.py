@@ -164,7 +164,7 @@ def register():
     else:
         # this means either it was GET request or checks failed
         if request.method == "GET":
-            return render_template('register.html', form=form)
+            return render_template('register.html',logo_path=logo_path, form=form)
         else:
             flash('Dogodila se greška prilikom registracije.')
             return redirect(url_for('register'))
@@ -185,7 +185,7 @@ def login():
         else:
             login_user(user)
             return redirect(url_for('view_services'))
-    return render_template('login.html')
+    return render_template('login.html', logo_path = logo_path)
 
 
 @app.route('/logout')
@@ -363,7 +363,7 @@ def inventory_check_status():
         # TODO: print inventory check report --> missing/unchecked items (maybe ask to finish it with missing items
         #  or not?)
         # TODO: find a better way to link to a file
-        request = get('http://127.0.0.1:5000/static/files/inventar.xlsx')
+        request = get('https://administration-manager.herokuapp.com/static/files/inventar.xlsx')
         buffer = BytesIO(request.content)
         workbook = load_workbook(buffer)
         worksheet = workbook['Inventar']
@@ -388,6 +388,7 @@ def inventory_check_status():
         for item in items:
             item.item_status = False
             db.session.commit()
+        print(request)
         return send_file(BytesIO(buffer2.read()), mimetype="application/vnd.ms-excel", download_name="inventar.xlsx", as_attachment=False)
     return redirect('view_inventory')
 

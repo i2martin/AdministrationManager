@@ -1,5 +1,6 @@
 from io import BytesIO, StringIO
 from os.path import isfile
+from os import environ
 import openpyxl
 from datetime import datetime
 
@@ -18,10 +19,7 @@ honorarium_cell_columns = ["D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"
 
 total_count_cells = ["AB12", "AB13", "AB14", "AB15", "AB16", "AB17"]
 
-filename = 'static/files/tablica-honorari.xlsx'
-original = r'static/files/tablica-honorari.xlsx'
-target = r'static/files/temp_files/tablica-honorari.xlsx'
-
+filename = environ.get('H_PATH')
 
 def open_workbook(f_name):
     return openpyxl.load_workbook(filename=f_name)
@@ -35,7 +33,7 @@ def honorarium(data, workdays, user):
     month_of_report = datetime.utcnow().strftime("%m/%Y")
     if isfile(filename):
         # TODO: find a better way to link to a file
-        request = get('http://127.0.0.1:5000/static/files/tablica-honorari.xlsx')
+        request = get('https://administration-manager.herokuapp.com/static/files/tablica-honorari.xlsx')
         buffer = BytesIO(request.content)
         workbook = open_workbook(buffer)
         worksheet = select_worksheet(workbook)

@@ -1,4 +1,5 @@
 from io import BytesIO
+from os import environ
 from os.path import isfile
 import openpyxl
 from datetime import datetime
@@ -26,9 +27,7 @@ vehicle_cells = ['D11', 'D12', 'D13', 'D14', 'D15', 'D16', 'D17', 'D18', 'D19', 
 
 total_count_cells = ["AB12", "AB13", "AB14", "AB15", "AB16", "AB17"]
 
-filename = 'static/files/tablica-prijevoz.xlsx'
-original = r'static/files/tablica-prijevoz.xlsx'
-target = r'static/files/temp_files/tablica-prijevoz.xlsx'
+filename = environ.get('T_PATH')
 month_year_cell = "A10"
 
 
@@ -49,7 +48,7 @@ def travel(data, workdays, user):
     total_return = 0
     if isfile(filename):
         # TODO: find a better way to link to a file
-        request = get('http://127.0.0.1:5000/static/files/tablica-prijevoz.xlsx')
+        request = get('https://administration-manager.herokuapp.com/static/files/tablica-prijevoz.xlsx')
         buffer = BytesIO(request.content)
         workbook = open_workbook(buffer)
         worksheet = select_worksheet(workbook)
@@ -66,9 +65,18 @@ def travel(data, workdays, user):
             for i in range(0, len(data_keys)):
                 worksheet[list_of_cell_dates[i]] = workdays[int(data_keys[i])]
                 worksheet[km_arrival_cells[i]] = km_arrival[int(data_keys[i])]
-                total_arrival = total_arrival + float(km_arrival[int(data_keys[i])])
+                #check to see if the input values are empty or numbers (if empty --> can't be converted to float)
+                try:
+                    total_arrival = total_arrival + float(km_arrival[int(data_keys[i])])
+                except:
+                    total_arrival = ""
+
                 worksheet[km_return_cells[i]] = km_return[int(data_keys[i])]
-                total_return = total_return + float(km_return[int(data_keys[i])])
+                try:
+                    total_return = total_return + float(km_return[int(data_keys[i])])
+                except:
+                    total_return = ""
+                #total_return = total_return + float(km_return[int(data_keys[i])])
                 worksheet[vehicle_cells[i]] = vehicle[int(data_keys[i])]
 
         # add user specific fields to excel table (if they are set)
@@ -89,7 +97,10 @@ def travel(data, workdays, user):
             worksheet["C39"] = user.transportation_fee
             worksheet["D40"] = user.transportation_fee * (total_arrival + total_return)
 
-        workbook.save(buffer)
+        #workbook.save(buffer)
         buffer.seek(0)
-        return send_file(BytesIO(buffer.read()), mimetype="application/vnd.ms-excel", download_name="prijevoz.xlsx", as_attachment=True)
+        buffer2 = BytesIO()
+        workbook.save(buffer2)
+        buffer2.seek(0)
+        return send_file(BytesIO(buffer2.read()), mimetype="application/vnd.ms-excel", download_name="prijevoz.xlsx", as_attachment=True)
 
