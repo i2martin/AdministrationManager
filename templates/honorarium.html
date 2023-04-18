@@ -3,39 +3,41 @@
 {% block content %}
 {% include 'header.html' %}
 
-<div class="container-fluid custom-padding">
+<div class="container-fluid" >
     <form action="{{url_for('honorarium')}}" method="POST">
-        <table class="table-dark table text-center table-responsive table-md">
-            <thead>
-            <tr>
-                <th>Nastavni predmet</th>
-                <th>Razred</th>
-                <th colspan="{{forms|length + number_of_workdays}}">Datumi održanih nastavnih sati</th>
-            <tr>
-                <td></td>
-                <td></td>
-                {% for workday in workdays %}
-                <td>
-                    {{workday}}
-                </td>
+        <div class="overflow">
+            <table class="table-dark table text-center table-responsive table-md">
+                <thead>
+                <tr>
+                    <th>Nastavni predmet</th>
+                    <th>Razred</th>
+                    <th colspan="{{forms|length + number_of_workdays}}">Datumi održanih nastavnih sati</th>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    {% for workday in workdays %}
+                    <td>
+                        {{workday}}
+                    </td>
+                    {% endfor %}
+                </tr>
+                </tr>
+                </thead>
+                <tbody>
+                {% for form in forms %}
+                <tr>
+                    <td>{{form.subject(pattern=".{3,50}", title='Nastavni predmet mora sadržavati najmanje 3 znaka.')}}</td>
+                    <td>{{form.class_tag(size = 5)}}</td>
+                    {% for i in range(0,number_of_workdays) %}
+                    <td>{{form.hours(size=1,class="text-center", pattern="[0-9]{1,2}", title="Cijeli broj s do dvije znamenke.")}}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-            </tr>
-            </thead>
-            <tbody>
-            {% for form in forms %}
-            <tr>
-                <td>{{form.subject(pattern=".{3,50}", title='Nastavni predmet mora sadržavati najmanje 3 znaka.')}}</td>
-                <td>{{form.class_tag(size = 5)}}</td>
-                {% for i in range(0,number_of_workdays) %}
-                <td>{{form.hours(size=1,class="text-center", pattern="[0-9]{1,2}", title="Cijeli broj s do dvije znamenke.")}}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
         <div class="btn-custom justify-content-center align-content-center text-center">
             {{forms[0].submit(class='btn btn-light btn-outline-light btn-lg col-3 text-dark')}}
         </div>

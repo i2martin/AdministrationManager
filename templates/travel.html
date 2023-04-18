@@ -2,38 +2,39 @@
 {% block title %}Prijevoz{% endblock %}
 {% block content %}
 {% include 'header.html' %}
-<div class="container-fluid custom-padding">
+<div class="custom-padding" >
     <form action="{{url_for('travel_expense')}}" id="form" method="POST">
-
-        <table class="table-dark table text-center table-responsive table-md">
-            <thead>
-            <tr>
-                <th>Datum</th>
-                <th>Broj prijeđenih <br>kilometara pri dolasku</th>
-                <th>Broj prijeđenih <br> kilometara pri odlasku</th>
-                <th>Prijevozno sredstvo</th>
-                <th>Potvrdi</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for i in range(0, number_of_workdays) %}
-            <tr class="g-0">
-                <td class="no-padding text-center">{{workdays[i]}}</td>
-                {% if travel_distance != None %}
-                <td>{{form.km_arrival(class='no-padding rounded text-center', value=travel_distance, pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
-                <td>{{form.km_return(class='no-padding rounded text-center', value=travel_distance, pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
-                {% else %}
-                <td>{{form.km_arrival(class='no-padding rounded text-center', pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
-                <td>{{form.km_return(class='no-padding rounded text-center', pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
-                {% endif %}
-                <td>{{form.vehicle(class='no-padding rounded')}}</td>
-                <td><input class='no-padding rounded' name="{{i}}" onclick="change(this)" type="checkbox" checked></td>
-            </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            </tfoot>
-        </table>
+        <div class="overflow">
+            <table class="table-dark table text-center table-responsive table-md">
+                <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Broj prijeđenih <br>kilometara pri dolasku</th>
+                    <th>Broj prijeđenih <br> kilometara pri odlasku</th>
+                    <th>Prijevozno sredstvo</th>
+                    <th>Potvrdi</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in range(0, number_of_workdays) %}
+                <tr class="g-0">
+                    <td class="no-padding text-center">{{workdays[i]}}</td>
+                    {% if travel_distance != None %}
+                    <td>{{form.km_arrival(class='no-padding rounded text-center', value=travel_distance, pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
+                    <td>{{form.km_return(class='no-padding rounded text-center', value=travel_distance, pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
+                    {% else %}
+                    <td>{{form.km_arrival(class='no-padding rounded text-center', pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
+                    <td>{{form.km_return(class='no-padding rounded text-center', pattern="[0-9]+([\.][0-9]+)?" ,step="0.01", title='Unesite broj s najviše dvije decimale.')}}</td>
+                    {% endif %}
+                    <td>{{form.vehicle(class='no-padding rounded')}}</td>
+                    <td><input class='no-padding rounded' name="{{i}}" onclick="change(this)" type="checkbox" checked></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
         <div class="btn-custom text-center">
             {{form.submit(class='btn btn-light btn-outline-light btn-lg col-3 text-dark')}}
         </div>

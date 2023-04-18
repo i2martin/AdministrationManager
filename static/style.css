@@ -13,6 +13,7 @@
 
 .btn-custom
 {
+    padding-top: 2%;
     padding-bottom: 5%;
 }
 body
@@ -199,4 +200,9 @@ ul
   right: 15px;
   border: 3px solid #f1f1f1;
   z-index: 9;
+}
+
+.overflow
+{
+   overflow-x: auto;
 }
