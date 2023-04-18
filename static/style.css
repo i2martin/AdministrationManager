@@ -74,12 +74,6 @@ ul
     padding-bottom: 2%;
 }
 
-.table{
-    -moz-box-shadow: 0px 0px 15px 5px #404040;
-    -webkit-box-shadow: 0px 0px 15px 5px #404040;
-    box-shadow: 0px 0px 15px 5px #404040;
-}
-
 #password-error, #username-error
 {
     visibility: hidden;
