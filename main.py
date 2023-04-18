@@ -4,7 +4,7 @@ import os
 import PIL
 from PIL.Image import Image
 from openpyxl import load_workbook
-from flask import Flask, render_template, request, send_from_directory, redirect, url_for, send_file
+from flask import Flask, render_template, request, redirect, url_for, send_file
 from flask_wtf import FlaskForm
 from flask import flash
 from requests import get
@@ -17,7 +17,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 import qrcode
 import validators as validate
-import psycopg2
 login_manager = LoginManager()
 app = Flask(__name__)
 
@@ -29,6 +28,7 @@ app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", 'sqlite:///users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -333,9 +333,9 @@ def inventory_check(organisation, inventory_id):
         # update item status to checked (True)
         item.item_status = True
         db.session.commit()
-        return render_template('itemStatus.html', name=item.name, found = os.environ.get('FOUND_PATH'), missing = os.environ.get('MISSING_PATH'))
+        return render_template('itemStatus.html', name=item.name)
     else:
-        return render_template('itemStatus.html', found = os.environ.get('FOUND_PATH'), missing = os.environ.get('MISSING_PATH'))
+        return render_template('itemStatus.html')
 
 
 @app.route('/inventory_check_status')
@@ -511,7 +511,7 @@ def remove_inventory(id):
 def update_inventory(id):
     if request.method == "POST":
         item = Inventory.query.filter_by(inventory_number = id, organisation=current_user.organisation).first()
-        #TODO: Check if the new inventory number already exists
+        # TODO: Check if the new inventory number already exists
         item.inventory_number = request.form.get('inventory_number')
         item.name = request.form.get('name')
         item.location = request.form.get('location')
@@ -520,6 +520,7 @@ def update_inventory(id):
         item.value = request.form.get('value')
         db.session.commit()
         return redirect(url_for('view_inventory'))
+
 
 if __name__ == '__main__':
     app.run()
