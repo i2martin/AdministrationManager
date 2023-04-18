@@ -328,11 +328,11 @@ def view_inventory():
 @app.route('/inventory/<organisation>/<inventory_id>')
 def inventory_check(organisation, inventory_id):
     item = Inventory.query.filter_by(inventory_number=inventory_id, organisation=organisation).first()
-    if item and InventoryCheckHistory.query.filter_by(
-            organisation=organisation).first().inventory_check is True:
+    if item:
+        if InventoryCheckHistory.query.filter_by(organisation=organisation).first().inventory_check is True:
         # update item status to checked (True)
-        item.item_status = True
-        db.session.commit()
+            item.item_status = True
+            db.session.commit()
         return render_template('itemStatus.html', name=item.name)
     else:
         return render_template('itemStatus.html')
@@ -504,6 +504,7 @@ def remove_inventory(id):
     db.session.delete(item)
     db.session.commit()
     return redirect(url_for('view_inventory'))
+
 
 @app.route('/update_inventory/<id>', methods=["POST"])
 @login_required
