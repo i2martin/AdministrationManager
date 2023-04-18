@@ -333,9 +333,9 @@ def inventory_check(organisation, inventory_id):
         # update item status to checked (True)
         item.item_status = True
         db.session.commit()
-        return render_template('itemStatus.html', name=item.name, found = os.environ.get('FOUND_PATH'))
+        return render_template('itemStatus.html', name=item.name, found = os.environ.get('FOUND_PATH'), missing = os.environ.get('MISSING_PATH'))
     else:
-        return render_template('itemStatus.html', missing = os.environ.get('MISSING_PATH'))
+        return render_template('itemStatus.html', found = os.environ.get('FOUND_PATH'), missing = os.environ.get('MISSING_PATH'))
 
 
 @app.route('/inventory_check_status')
