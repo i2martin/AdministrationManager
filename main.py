@@ -405,14 +405,14 @@ def concat_images_horizontally(images):
             global dst
             if i % 2 == 0 or i == len(images) - 1:
                 if i != len(images) - 1:
-                    dst = PIL.Image.new('RGB', (120, 60))
+                    dst = PIL.Image.new('RGB', (160, 80))
                     dst.paste(images[i], (0, 0))
                 else:
-                    dst = PIL.Image.new('RGB', (60, 60))
+                    dst = PIL.Image.new('RGB', (80, 80))
                     dst.paste(images[i], (0, 0))
                     new_images.append(dst)
             else:
-                dst.paste(images[i], (60,0))
+                dst.paste(images[i], (80,0))
                 new_images.append(dst)
         return new_images
     else:
@@ -426,24 +426,23 @@ def concat_images_vertically(images):
     :return: list of vertically stacked PIL.Image objects
     """
     global dst
-    image_count = 0
     new_images = []
     if len(images) >= 2:
         for i in range(0, len(images)):
             if i % 2 == 0 or i == len(images) - 1:
                 if i != len(images) - 1:
-                    dst = PIL.Image.new('RGB', (120, 120))
+                    dst = PIL.Image.new('RGB', (160, 160))
                     dst.paste(images[i], (0, 0))
                 elif len(images) - 1 == 1:
-                    dst.paste(images[i], (0, 60))
-                    dst.paste(PIL.Image.new("RGB", (60, 60), (255, 255, 255)), (60, 60))
+                    dst.paste(images[i], (0, 80))
+                    dst.paste(PIL.Image.new("RGB", (80, 80), (0, 0, 0)), (80, 80))
                     new_images.append(dst)
                 else:
-                    dst = PIL.Image.new('RGB', (120, 120))
+                    dst = PIL.Image.new('RGB', (160, 160))
                     dst.paste(images[i], (0, 0))
                     new_images.append(dst)
             else:
-                dst.paste(images[i], (0, 60))
+                dst.paste(images[i], (0, 80))
                 new_images.append(dst)
         return new_images
     else:
@@ -456,8 +455,8 @@ def generate_qr_codes():
     data = Inventory.query.filter_by(organisation=current_user.organisation).all()
     qrcodes = []
     for i in range(0, len(data)):
-        img = qrcode.make("http://127.0.0.1:5000/inventory/" + current_user.organisation + "/" + data[i].inventory_number)
-        img = img.resize(size=(60, 60))  # TODO: this might cause a problem with size
+        img = qrcode.make("https://administration-manager.herokuapp.com/inventory/" + current_user.organisation + "/" + data[i].inventory_number)
+        img = img.resize(size=(80, 80))  # TODO: this might cause a problem with size
         qrcodes.append(img)
     if len(qrcodes) > 0:
         if len(qrcodes) > 2:
@@ -479,7 +478,7 @@ def generate_qr_codes():
 def print_inventory():
     data = Inventory.query.filter_by(organisation=current_user.organisation).order_by(Inventory.location.asc()).all()
     # TODO: find a better way to link to a file
-    request = get('http://127.0.0.1:5000/static/files/inventar.xlsx')
+    request = get('https://administration-manager.herokuapp.com/static/files/inventar.xlsx')
     buffer = BytesIO(request.content)
     workbook = load_workbook(buffer)
     worksheet = workbook['Inventar']
