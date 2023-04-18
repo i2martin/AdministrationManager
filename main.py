@@ -21,12 +21,14 @@ import psycopg2
 login_manager = LoginManager()
 app = Flask(__name__)
 
+logo_path = os.environ.get("LOGO_PATH2")
+
+
 app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", 'sqlite:///users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -134,7 +136,7 @@ class Honorari(FlaskForm):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('index.html', logo = os.environ.get('LOGO_PATH'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -206,7 +208,7 @@ def travel_expense():
         return te.travel(data=request.form.to_dict(flat=False), workdays=workdays, user=current_user)
     else:
         form = PutniTroskovi()
-        return render_template('travel.html', form=form, workdays=workdays, number_of_workdays=number_of_workdays,
+        return render_template('travel.html',logo_path = logo_path, form=form, workdays=workdays, number_of_workdays=number_of_workdays,
                                travel_distance=current_user.travel_distance)
 
 
@@ -230,7 +232,7 @@ def honorarium():
         for i in range(0, 5):
             form = Honorari()
             forms.append(form)
-        return render_template('honorarium.html', forms=forms, workdays=workdays, number_of_workdays=number_of_workdays)
+        return render_template('honorarium.html', logo_path = logo_path, forms=forms, workdays=workdays, number_of_workdays=number_of_workdays)
 
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -263,13 +265,13 @@ def settings():
             current_user.transportation_fee = transportation_fee
             db.session.commit()
         return redirect(url_for('view_services'))
-    return render_template('settings.html', form=form)
+    return render_template('settings.html', form=form, logo_path = logo_path)
 
 
 @app.route('/services', methods=['GET'])
 @login_required
 def view_services():
-    return render_template('services.html')
+    return render_template('services.html', logo_path = logo_path)
 
 
 @app.route('/add_inventory', methods=["GET", "POST"])
@@ -294,7 +296,7 @@ def add_inventory():
             db.session.commit()
             flash('Inventar je uspješno ažuriran!')
         return redirect(url_for('add_inventory', status="success"))
-    return render_template('inventory.html', form=form)
+    return render_template('inventory.html', form=form, logo_path = logo_path)
 
 
 @app.route("/view_inventory")
@@ -319,23 +321,21 @@ def view_inventory():
             for i in Inventory.query.filter_by(organisation=current_user.organisation, location=item.location).all():
                 inventory_list.append(i)
             inventory_by_location.append(inventory_list)
-    return render_template('viewInventory.html', organisation=current_user.organisation, locations=locations,
+    return render_template('viewInventory.html',logo_path = logo_path, organisation=current_user.organisation, locations=locations,
                            data=inventory_by_location, status=status, form=form, form_popup=form_popup)
 
 
 @app.route('/inventory/<organisation>/<inventory_id>')
 def inventory_check(organisation, inventory_id):
-    print(organisation)
     item = Inventory.query.filter_by(inventory_number=inventory_id, organisation=organisation).first()
-    print(item)
     if item and InventoryCheckHistory.query.filter_by(
             organisation=organisation).first().inventory_check is True:
         # update item status to checked (True)
         item.item_status = True
         db.session.commit()
-        return render_template('itemStatus.html', name=item.name)
+        return render_template('itemStatus.html', name=item.name, found = os.environ.get('FOUND_PATH'))
     else:
-        return render_template('itemStatus.html')
+        return render_template('itemStatus.html', missing = os.environ.get('MISSING_PATH'))
 
 
 @app.route('/inventory_check_status')
@@ -428,7 +428,6 @@ def concat_images_vertically(images):
     image_count = 0
     new_images = []
     if len(images) >= 2:
-        print(len(images))
         for i in range(0, len(images)):
             if i % 2 == 0 or i == len(images) - 1:
                 if i != len(images) - 1:
@@ -462,10 +461,8 @@ def generate_qr_codes():
     if len(qrcodes) > 0:
         if len(qrcodes) > 2:
             qrcodes = concat_images_horizontally(qrcodes)
-            print(qrcodes)
             if len(qrcodes) >= 2:
                 qrcodes = concat_images_vertically(qrcodes)
-                print(qrcodes)
         qrcodes_buffer = BytesIO()
         qrcodes = qrcodes
         qrcodes[0].save(qrcodes_buffer, "PDF", resolution=100.0, save_all=True, append_images=qrcodes[0:])
@@ -523,7 +520,6 @@ def update_inventory(id):
         item.value = request.form.get('value')
         db.session.commit()
         return redirect(url_for('view_inventory'))
-
 
 if __name__ == '__main__':
     app.run()
