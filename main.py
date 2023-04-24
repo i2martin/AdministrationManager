@@ -523,5 +523,15 @@ def update_inventory(id):
         return redirect(url_for('view_inventory'))
 
 
+@app.route('/privacy_policy', methods=["GET"])
+def privacy_policy():
+    return render_template('privacyPolicy.html')
+
+
+@app.route('/terms_and_conditions', methods=["GET"])
+def terms_and_conditions():
+    return render_template('termsAndConditions.html')
+
+
 if __name__ == '__main__':
     app.run()

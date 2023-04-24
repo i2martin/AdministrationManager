@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Politika privatnosti{% endblock %}
+{% block content %}
+    {% include 'header.html' %}
+    <div class="container-fluid text-light custom-padding">
+        <h1 class="text-center">Uvjeti korištenja</h1>
+        <p>
+            Ovi uvjeti korištenja ( u daljnjem tekstu "Uvjeti") primjenjuju se na korištenje
+            web stranice Administration Manager (u daljnjem tekstu: "Stranica")
+            koja se nalazi na lokaciji. Pristupanjem i korištenjem Stranice prihvaćate ove Uvjete.
+            Ako se ne slažete s ovim Uvjetima, nemojte pristupati ili koristiti Stranicu.
+        </p>
+
+        <h2>1. Korištenje usluga</h2>
+        <p>
+            <h3>1.1. Dozvola za korištenje</h3> <br>
+            Pod uvjetom da se pridržavate ovih Uvjeta, odobravamo Vam ograničenu,
+            neekskluzivnu, neprenosivu i opozivu dozvolu za pristup i korištenje
+            Stranice u svrhu vaše osobne, nekomercijalne upotrebe.
+        </p>
+        <p>
+            <h2>2. Nedozvoljene aktivnosti</h2>
+            Nije dozvoljeno koristiti Stranicu u bilo koje nezakonite ili neovlaštene
+            svrhe, niti smijete kršiti zakone ili propise u korištenju Stranice.
+            Ne smijete mijenjati, distribuirati, prenositi, prikazivati, izvoditi,
+            reproducirati, objavljivati, licencirati, stvarati izvedene radove,
+            prenositi ili prodavati bilo kakve informacije, softver, proizvode ili
+        usluge dobivene putem Stranice.
+        </p>
+        <h2>3. Korisnički sadržaj</h2>
+        <p>
+            Samo ste vi odgovorni za bilo kakav sadržaj koji objavite ili pošaljete na Stranicu
+            (u daljnjem tekstu: "Korisnički sadržaj"). Slažete se da vaš Korisnički sadržaj
+            neće kršiti prava trećih strana, uključujući prava intelektualnog vlasništva,
+            privatnost ili prava javnosti. Zadržavamo pravo uklanjanja bilo kojeg
+            Korisničkog sadržaja koji krši ove Uvjete.
+        </p>
+        <h2>4. Intelektualno vlasništvo</h2>
+        <p>
+            Stranica i njezin cjelokupan sadržaj, funkcionalnost i dizajn (uključujući,
+            ali ne ograničavajući se na, informacije, softver, tekst, slike, videozapise
+            i zvuk, te njihovu selekciju i raspored) vlasništvo su nas, naših davatelja
+            licenci ili drugih pružatelja takvog materijala, te su zaštićeni zakonima o
+            autorskom pravu, žigovima, patentima, tajnama poslovnih informacija i drugim
+            zakonima o intelektualnom vlasništvu.
+        </p>
+        <h2>5. Ograničenja odgovornosti</h2>
+        <p>
+            Stranica se pruža "kako jest" i "kako je dostupna". Ne dajemo nikakva jamstva
+            ili izjave u vezi s kvalitetom, točnošću, pouzdanošću ili dostupnošću Stranice
+            ili njezina sadržaja. Vaše korištenje Stranice i njezina sadržaja je isključivo
+            na vašu odgovornost. <br>
+            U najvećoj mjeri dopuštenoj zakonom, nećemo biti odgovorni za bilo kakvu štetu
+            ili gubitke, uključujući poslovne gubitke, gubitak profita, prekid poslovanja,
+            gubitak podataka ili drugu nematerijalnu štetu koji nastanu kao posljedica vašeg
+            korištenja Stranice ili njezina sadržaja, bez obzira na uzrok.
+        </p>
+        <h2>6. Zaštita podataka</h2>
+        <p>
+            Vaša privatnost nam je važna. Sve prikupljene i obrađene osobne informacije
+            bit će obrađene u skladu s našom Politikom privatnosti, koja je dostupna na Stranici.
+        </p>
+        <h2>7. Promjene Uvjeta korištenja</h2>
+        <p>
+            Zadržavamo pravo izmjene ovih Uvjeta u bilo kojem trenutku i bez prethodne
+            obavijesti. Ove izmjene stupaju na snagu odmah nakon njihove objave na
+            Stranici. Vaše korištenje Stranice nakon takvih promjena znači da prihvaćate
+            izmijenjene Uvjete.
+        </p>
+        <h2>8. Raskid</h2>
+        <p>
+            Mi ili vi možemo prekinuti ovu dozvolu u bilo kojem trenutku bez obavijesti.
+            Svi ograničeni pristupi i dozvole koje su vam odobrene prethodno prestaju
+            odmah nakon raskida ove dozvole.
+        </p>
+        <h2>8. Primjena zakona</h2>
+        <p>
+            Ovi Uvjeti podliježu hrvatskom pravu, a svi sporovi koji se odnose na ove
+            Uvjete podliježu nadležnosti sudova u Hrvatskoj.
+            <br>
+            Ako imate bilo kakvih pitanja u vezi s ovim Uvjetima korištenja,
+            možete nas kontaktirati putem adrese elektroničke pošte navedene na Stranici.
+
+        </p>
+    </div>
+{% endblock %}
+{% block footer %}
+<footer class="footer1">
+    <div>
+        <a href="{{url_for('privacy_policy')}}">Pravila privatnosti</a>
+        <a href="{{url_for('terms_and_conditions')}}">Uvjeti korištenja </a>
+    </div>
+    <div>
+        @Copyright Ivan Martinović 2023.
+    </div>
+</footer>
+{% endblock %}
