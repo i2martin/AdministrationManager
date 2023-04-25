@@ -30,7 +30,7 @@
                                         <i class="register-icons fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div class="form-outline flex-fill mb-0">
                                             <span id="username-error">1</span>
-                                            {{form.username(class="form-control", pattern=".{8,30}", title="Korisničko ime mora sadržavati 8-30 znakova.", required="True")}}
+                                            {{form.username(class="form-control", pattern="^(?=.{8,30}$)[a-zA-Z0-9_ćĆČčŠĐŽđžš]+$", title="Korisničko ime mora sadržavati 8 do 30 slova. Nisu dozvoljeni posebni znakovi osim znaka '_'", required="True")}}
                                             <label class="form-label">Korisničko ime</label>
                                         </div>
                                     </div>

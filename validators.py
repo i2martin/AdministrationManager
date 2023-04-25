@@ -24,12 +24,9 @@ def check_password(password):
 
 
 def check_username(username):
-    # Check if username is between 6 and 30 characters long
-    if len(username) < 6 or len(username) > 30:
-        return False
 
     # Check if username contains only allowed characters
-    if not re.match(r'^[a-zA-Z0-9_]+$', username):
+    if not re.match(r'^(?=.{8,30}$)[a-zA-Z0-9_ćĆČčŠĐŽđžš]+$', username):
         return False
 
     # Check if username contains any SQL statements

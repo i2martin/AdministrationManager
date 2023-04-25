@@ -137,7 +137,6 @@
         tdValues.push(tdElements[i].innerHTML);
       }
 
-      console.log(tdValues);
       document.getElementById("inventory_number").value = tdValues[0].trim();
       document.getElementById("name").value = tdValues[1].trim();
       document.getElementById("unit").value = tdValues[2].trim();
@@ -149,7 +148,6 @@
       }
 
       let buttons = document.getElementsByClassName('button-link btn-form-popup');
-      console.log(buttons);
       for (let i = 0; i < buttons.length; i++) {
       buttons[i].addEventListener('click', findTdValues);
       }
