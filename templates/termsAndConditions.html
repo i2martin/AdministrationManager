@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Politika privatnosti{% endblock %}
+{% block title %}Uvjeti korištenja{% endblock %}
 {% block content %}
     {% include 'header.html' %}
     <div class="container-fluid text-light custom-padding">
@@ -93,9 +93,9 @@
     <div>
         @Copyright Ivan Martinović 2023.
         <div class="container text-center">
-        <a href="{{url_for('privacy_policy')}}" class="link-primary">Uvjeti korištenja</a>
-        <a href="{{url_for('terms_and_conditions')}}" class="link-primary">Pravila privatnosti</a>
-    </div>
+            <a href="{{url_for('privacy_policy')}}" class="link-primary">Pravila privatnosti</a>
+            <a href="{{url_for('terms_and_conditions')}}" class="link-primary">Uvjeti korištenja</a>
+        </div>
     </div>
 </footer>
 {% endblock %}
