@@ -201,3 +201,20 @@ ul
 {
    overflow-x: auto;
 }
+ @media only screen and (max-device-width: 610px) {
+       /* styles for browsers smaller than 610px - some mobile browsers*/
+       .div-forms
+       {
+        display: block;
+
+       }
+       .custom-forms
+       {
+         text-align: center;
+         padding-bottom: 2%;
+       }
+       .btn#generate_qrs, .btn#print_inventory, .btn#start_check, .btn#finish_check, .btn#submit
+       {
+        width: 400px;
+       }
+    }

@@ -40,7 +40,7 @@
     {% endif %}
     {% endfor %}
 </ul>
-<div class="tab-content" id="myTabContent">
+<div class="tab-content overflow" id="myTabContent">
     {% for i in range(0, locations|length) %}
     {% if i != 0 %}
     <div aria-labelledby={{locations[i]|replace('','-')+"-tab"}} class="tab-pane fade text-light" id={{locations[i]|replace(' ','-')+"-pane"}} role="tabpanel"
@@ -156,5 +156,20 @@
         document.getElementById("myForm").style.display = "none";
       }
 
+      $('#finish_check').on( "click", function()
+      {
+        setTimeout(function() {
+         window.location.reload();
+      }, 10000);
+      });
 </script>
+{% endblock %}
+{% block footer %}
+<footer class="footer1">
+@Copyright Ivan Martinović 2023.
+    <div class="container text-center">
+        <a href="{{url_for('privacy_policy')}}" class="link-primary">Uvjeti korištenja</a>
+        <a href="{{url_for('terms_and_conditions')}}" class="link-primary">Pravila privatnosti</a>
+    </div>
+</footer>
 {% endblock %}
